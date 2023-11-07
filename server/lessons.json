@@ -1,0 +1,69 @@
+
+
+{
+   "1": {
+       "words": [
+    "Hello",
+    "Goodbye",
+    "Please",
+    "Thank you",
+    "Yes",
+    "No",
+    "Excuse me",
+    "I",
+    "You",
+    "Name"
+    ]
+   },
+    "2" : {
+
+    },
+
+
+    "LessonOne": {
+        "neWords": ["hello", "please", "thank you", "yes", "no", "sorry", "goodbye", "help", "I", "my name is"],
+        "questions": [
+            {
+                "type": "multiple choice",
+                "question": "Translate 'yes' To [LANG]",
+                "answer": "[LANG 'yes']"
+            },
+            {
+                "type": "multiple choice",
+                "question": "Translate 'sorry' To [LANG]",
+                "answer": "[LANG 'sorry']"
+            },
+            {
+                "type": "multiple choice",
+                "question": "Translate 'I' To [LANG]",
+                "answer": "[LANG 'I']"
+            },
+            {
+                "type": "multiple choice",
+                "question": "Translate 'goodbye' To [LANG]",
+                "answer": "[LANG 'goodbye']"
+            },
+            {
+                "type": "multiple choice",
+                "question": "Translate '[LANG 'my name is']' To English",
+                "answer": "my name is"
+            },
+            {
+                "type": "multiple choice",
+                "question": "Translate '[LANG 'please']' To English",
+                "answer": "please"
+            },
+            {
+                "type": "fill in",
+                "question": "[LANG 'hello, my name is ____']",
+                "answer": "[USERNAME]"
+            },
+            {
+                "type": "fill in",
+                "question": "[LANG 'help me ____']",
+                "answer": "[LANG 'please']"
+            }
+
+        ]
+    }
+}
