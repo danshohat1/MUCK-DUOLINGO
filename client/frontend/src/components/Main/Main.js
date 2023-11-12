@@ -1,12 +1,12 @@
 // Home.js
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import "./Main.css";
 function Main() {
-
+  const navigate = useNavigate();
   if (sessionStorage.getItem("loggedIn") !== "true"){
     return (
-      <Navigate to = "/login"/>
+      navigate("/login")
     )
   }
   return (

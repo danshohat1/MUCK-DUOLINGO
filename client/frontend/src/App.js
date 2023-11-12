@@ -9,6 +9,7 @@ import VideoChat from './components/VideoChat/VideoChat';
 import "./App.css";
 import {AuthProvider} from "./AuthContext"
 import EditAccount from './components/EditAcount/EditAcount';
+import PageNotFound from './components/PageNotFound/PageNotFound';
 
 
 function App() {
@@ -29,6 +30,8 @@ function App() {
 
             <Route path = "/edit-account" element = {<EditAccount />} />
             <Route path="/video-chat/:lang" element={<VideoChat />} />
+
+            <Route path="*" element={<PageNotFound />} />
           </Routes>
 
         </AuthProvider>

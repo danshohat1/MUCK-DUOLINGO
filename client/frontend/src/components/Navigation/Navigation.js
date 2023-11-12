@@ -20,9 +20,12 @@ function Navigation() {
 
   const handleAccountClose = () => {
     setAnchorEl(null);
-    logout();
   };
 
+  const handleLogout = () => {
+    setAnchorEl(null);
+    logout();
+  }
   const open = Boolean(anchorEl);
 
 
@@ -61,7 +64,7 @@ function Navigation() {
               <Button color="inherit" component={Link} to="/edit-account" onClick = {() =>  setAnchorEl(null)}>
                 Edit Account
               </Button>
-              <Button color="inherit" component={Link} to="/login" onClick={handleAccountClose}>
+              <Button color="inherit" component={Link} to="/login" onClick={handleLogout}>
                 Logout
               </Button>
             </Popover>

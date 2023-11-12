@@ -1,26 +1,36 @@
 import React, { useEffect, useRef } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,  useNavigate } from 'react-router-dom';
 import Peer from 'peerjs';
 import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
 import axios from 'axios';
 
+
 const VideoCallComponent = () => {
   const localVideoRef = useRef(null);
   const userVideoElements = {};
-  const {lang} = useParams();
+  const { lang } = useParams();
+  const navigate = useNavigate();
+
+
   useEffect(async () => {
     let socket;
     let localStream;
 
+  
+    if (sessionStorage.getItem("loggedIn") !== "true"){
+      return (
+        navigate("/login")
+      )
+    }
+  
     const res = await axios.get(`http://127.0.0.1:8003/join_chat?lang=${lang}`);
-    const {io_port, peer_port} = res.data;
-    console.log(res.data)
-    console.log(io_port, peer_port);
+    const { io_port, peer_port } = res.data;
 
     const myPeer = new Peer(undefined, {
       host: '/',
       port: peer_port,
     });
+
     let idFormat = [];
 
     const waitForVariable = () => {
@@ -36,63 +46,100 @@ const VideoCallComponent = () => {
       });
     };
 
-    myPeer.on('call', call => {
+    myPeer.on('call', (call) => {
       call.answer(localStream);
       call.on('stream', (userVideoStream) => {
         if (!userVideoElements[call.peer]) {
+          const containerDiv = document.createElement('div');
+          containerDiv.style.position = 'relative';
+          containerDiv.style.width = '320px';
+          containerDiv.style.height = '240px';
+
           const videoElement = document.createElement('video');
           videoElement.setAttribute('playsinline', '');
           videoElement.setAttribute('autoplay', '');
-          videoElement.style.width = '320px';
-          videoElement.style.height = '240px';
-          console.log("here")
-          document.getElementById("root").appendChild(videoElement);
-          userVideoElements[call.peer] = videoElement;
-        }
-        userVideoElements[call.peer].srcObject = userVideoStream;
+          videoElement.style.width = '100%';
+          videoElement.style.height = '100%';
 
+          const remoteUsername = idFormat.filter((ids) => ids[0] === call.peer)[0][2];
+
+          const subtitle = document.createElement('div');
+          subtitle.innerText = remoteUsername;
+          subtitle.style.position = 'absolute';
+          subtitle.style.bottom = '0';
+          subtitle.style.left = '0';
+          subtitle.style.right = '0';
+          subtitle.style.textAlign = 'center';
+          subtitle.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+          subtitle.style.padding = '5px';
+          subtitle.style.color = 'white';
+          subtitle.style.width = '20%';
+
+          videoElement.srcObject = userVideoStream;
+
+          containerDiv.appendChild(videoElement);
+          containerDiv.appendChild(subtitle);
+
+          document.getElementById('video-chat').appendChild(containerDiv);
+          userVideoElements[call.peer] = containerDiv;
+        }
       });
     });
 
     const handleSocketEvents = () => {
       socket.on('connect', () => {
         console.log(`My Socket ID: ${socket.id}`);
-        console.log("here")
         socket.emit('new_connection', lang);
       });
 
       socket.on('peer', (data) => {
-        socket.emit('get_peer_id', data.sender_sid, myPeer.id);
+        socket.emit('get_peer_id', data.sender_sid, myPeer.id, sessionStorage.getItem('username'));
 
-        idFormat.push([data.user_id, data.sender_sid]);
+        idFormat.push([data.user_id, data.sender_sid, data.username]);
 
-        console.log('User connected: ' + data.user_id);
-        console.log(localStream)
         const call = myPeer.call(data.user_id, localStream);
 
-        call.on("stream", (userVideoStream) => {
+        call.on('stream', (userVideoStream) => {
           if (!userVideoElements[data.user_id]) {
-            const videoElement = document.createElement("video");
-    
-            // Set video attributes
-            videoElement.setAttribute("playsinline", "");
-            videoElement.setAttribute("autoplay", "");
-            videoElement.style.width = "320px";
-            videoElement.style.height = "240px";
-    
-            document.getElementById("root").appendChild(videoElement);
-            console.log(userVideoElements)
-            userVideoElements[data.user_id] = videoElement; // Store the reference
+            const containerDiv = document.createElement('div');
+            containerDiv.style.position = 'relative';
+            containerDiv.style.width = '320px';
+            containerDiv.style.height = '240px';
+
+            const videoElement = document.createElement('video');
+            videoElement.setAttribute('playsinline', '');
+            videoElement.setAttribute('autoplay', '');
+            videoElement.style.width = '100%';
+            videoElement.style.height = '100%';
+
+            const remoteUsername = idFormat.filter((ids) => ids[0] === data.user_id)[0][2];
+
+            const subtitle = document.createElement('div');
+            subtitle.innerText = remoteUsername;
+            subtitle.style.position = 'absolute';
+            subtitle.style.bottom = '0';
+            subtitle.style.left = '0';
+            subtitle.style.right = '0';
+            subtitle.style.textAlign = 'center';
+            subtitle.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+            subtitle.style.padding = '5px';
+            subtitle.style.color = 'white';
+            subtitle.style.width = '20%';
+
+            videoElement.srcObject = userVideoStream;
+
+            containerDiv.appendChild(videoElement);
+            containerDiv.appendChild(subtitle);
+
+            document.getElementById('video-chat').appendChild(containerDiv);
+            userVideoElements[data.user_id] = containerDiv;
           }
-          userVideoElements[data.user_id].srcObject = userVideoStream;
-    
-          // Remove the user's video element and its reference when the call is close
         });
       });
 
       socket.on('get_peer_id', (data) => {
         if (data.peer_id) {
-          idFormat.push([data.peer_id, data.sender_sid]);
+          idFormat.push([data.peer_id, data.sender_sid, data.username]);
         } else {
           console.error('data.peer_id is undefined or falsy');
         }
@@ -100,14 +147,14 @@ const VideoCallComponent = () => {
 
       socket.on('user_connected', (user_sid) => {
         console.log('User connected: ' + user_sid);
-        socket.emit('peer', user_sid, myPeer.id);
+        socket.emit('peer', user_sid, myPeer.id, sessionStorage.getItem('username'));
       });
 
       socket.on('user_disconnected', (user_sid) => {
         console.log('User disconnected: ' + user_sid);
         const userVideoElement = userVideoElements[idFormat.find((val) => val[1] === user_sid)[0]];
         if (userVideoElement) {
-          document.getElementById("root").removeChild(userVideoElement);
+          document.getElementById('video-chat').removeChild(userVideoElement);
           delete userVideoElements[idFormat.find((val) => val[1] === user_sid)[0]];
         }
         idFormat = idFormat.filter((val) => val[1] !== user_sid);
@@ -126,18 +173,22 @@ const VideoCallComponent = () => {
     });
 
     return () => {
+      console.log("in return")
       if (localStream) {
         localStream.getTracks().forEach((track) => {
           track.stop();
         });
       }
-      console.log("here!!!!")
       myPeer.destroy();
       socket.disconnect();
     };
-  }, []);
+  },[]);
 
-  return <video id="local-video" ref={localVideoRef} autoPlay muted playsInline style={{ width: '320px', height: '240px' }} />;
+  return (
+  <div id = "video-chat">
+      <video id="local-video" ref={localVideoRef} autoPlay muted playsInline style={{ width: '320px', height: '240px' }} />
+  </div>
+  )
 };
 
 export default VideoCallComponent;

@@ -20,8 +20,8 @@ function Login() {
       return;
     }
     
-    axios.post("http://localhost:8002/signup" , JSON.stringify({username: username, password: password})).then((data) =>{
-      if(data.data !== "user created"){
+    axios.post("http://localhost:8003/signup" , JSON.stringify({username: username, password: password})).then((data) =>{
+      if(data.data !== "User created successfully"){
         setError(data.data)
       }
       else{

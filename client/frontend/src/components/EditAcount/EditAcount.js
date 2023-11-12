@@ -14,8 +14,10 @@ import {
   Tabs,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import { useNavigate } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
+
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -45,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
 function EditAccount() {
   
 
-
+  const navigate = useNavigate();
   const classes = useStyles();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [currentTab, setCurrentTab] = useState(0);
@@ -67,6 +69,19 @@ function EditAccount() {
     return (
       <Navigate to = "/login"/>
     )
+  }
+
+
+  const deleteAccount = () => {
+
+    axios.delete("http://localhost:8003/update_user?username=" + sessionStorage.getItem("username")).then((data) => {
+      if (data.data === "User deleted successfully") {
+        sessionStorage.clear();
+        navigate("/login");
+      } else {
+        console.error("Error deleting user:", data.data);
+      }
+    })
   }
 
   
@@ -118,7 +133,12 @@ function EditAccount() {
     if (currentTab === 0) {
       // Password change verification
       if (verificationInput === sessionStorage.getItem("username")) {
-        setVerificationOpen(false);
+
+        axios.put(`http://localhost:8003/update_user?oldUsername=${sessionStorage.getItem("username")}&username=${sessionStorage.getItem("username")}&newPassword=${newPassword}`).then((data)=>{
+          setVerificationOpen(false);
+
+          navigate("/main")
+       })
         // Proceed with password change here
       } else {
         // Show an error that verification failed in the alert dialog
@@ -126,17 +146,16 @@ function EditAccount() {
       }
     } else if (currentTab === 1) {
       // Username change verification
-      await axios.get(`http://localhost:8002/password?username=${sessionStorage.getItem("username")}`).then((data)=>{
-        console.log(data.data)
+      await axios.get(`http://localhost:8003/password?username=${sessionStorage.getItem("username")}`).then((data)=>{
         if (data.data[0] !== verificationInput){
           setVerificationError('Verification code is incorrect. Please try again.');
           return;
         }
-        axios.put("http://localhost:8002/update_user", JSON.stringify({oldUsername: "user 1", username: newUsername, newPassword: data.data[0]}),{
-          withCredentials: true
-        }).then((data)=>{
+        axios.put(`http://localhost:8003/update_user?oldUsername=${sessionStorage.getItem("username")}&username=${newUsername}&newPassword=${data.data[0]}`).then((data)=>{
           setVerificationOpen(false);
-          console.log(data.data) 
+          sessionStorage.setItem("username", newUsername);
+
+          navigate("/main")
        })
       })
 
@@ -300,7 +319,7 @@ function EditAccount() {
             Cancel
           </Button>
           <Button
-            onClick={() => console.log('Delete Account')}
+            onClick={() => deleteAccount()}
             color="secondary"
           >
             Delete Account

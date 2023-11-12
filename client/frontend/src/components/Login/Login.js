@@ -17,10 +17,10 @@ function Login() {
   const handleLogin = () => {
     setIsLoading(true); // Set isLoading to true when the request starts
 
-    axios.post("http://localhost:8002/login", JSON.stringify({ username, password }))
+    axios.post("http://localhost:8003/login", JSON.stringify({ username, password }))
       .then((data) => {
         console.log("here")
-        if (data.data !== "logged in successfully") {
+        if (data.data !== "Logged in successfully") {
           setError(data.data);
         } else {
           login(username);
