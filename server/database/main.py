@@ -9,7 +9,7 @@ def main():
 class Datbase:
     def __init__(self):
         """Initialize the Database instance """
-        self.con = sqlite3.connect("users.sql")
+        self.con = sqlite3.connect("./database/users.sql")
         self.cur = self.con.cursor()
 
     def handle_home_screen(self, username):

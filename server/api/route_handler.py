@@ -1,11 +1,12 @@
-from database import Datbase
-from chat_handler import *
+from database import *
+from video_chat import *
+
 route_map = {}
 OK = "200 OK"
 UNAUTHORIZED = "401 Unauthorized"
 
 class Route_handler:
-    @staticmethod
+
     def route(path):
         """Decorator to register a function as a route handler for a specific path."""
         def _route(f):
@@ -118,4 +119,4 @@ class Route_handler:
 
         # Create a new chat session
         c.create_chat(args[0])
-        return {"io_port": c.get_chat_server_port(), "peer_port": c.get_peerjs_port()}, OK
+        return {"io_port": c.get_chat_server_port(), "peer_port": c.get_peerjs_port()},OK

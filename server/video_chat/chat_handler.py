@@ -1,5 +1,5 @@
 import subprocess
-from chat_server import Chat_Server
+from video_chat.chat_server import Chat_Server
 import threading
 import socket
 

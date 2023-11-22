@@ -1,7 +1,10 @@
 import json
-from route_handler import *
-VERSION = "HTTP/1.1"
+from api.route_handler import Route_handler, route_map
 from urllib.parse import unquote
+
+VERSION = "HTTP/1.1"
+
+
 
 class Http_Handler():
     def __init__(self, client_socket):
