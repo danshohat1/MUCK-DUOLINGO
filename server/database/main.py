@@ -1,15 +1,9 @@
 import sqlite3
 
-def main():
-    # Create a Database instance and demonstrate the usage of one of its functions
-    data = Datbase()
-    print(data.get_user_id_by_username("user 1"))
-
-
 class Datbase:
     def __init__(self):
         """Initialize the Database instance """
-        self.con = sqlite3.connect("./database/users.sql")
+        self.con = sqlite3.connect("./database/users.sql", check_same_thread=False)
         self.cur = self.con.cursor()
 
     def handle_home_screen(self, username):

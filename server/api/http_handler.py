@@ -1,19 +1,22 @@
 import json
-from api.route_handler import Route_handler, route_map
+from .route_handler import *
 from urllib.parse import unquote
+from .enums import HttpMethods
+import threading
 
 VERSION = "HTTP/1.1"
 
 
 
-class Http_Handler():
+class HttpHandler():
     def __init__(self, client_socket):
         """Initialize the HTTP handler with the client socket, receive and decode the client's request, and validate it."""
         self.client_socket = client_socket
         self.client_request = self.client_socket.recv(1024).decode()
 
-        print(self.client_request)
-        self.validate_http_request()
+        req_thread = threading.Thread(target= lambda: self.validate_http_request())
+
+        req_thread.start()
 
     def generate_friendly_request(self):
         """Split the raw HTTP request into a list and generate a user-friendly request with details."""
@@ -24,7 +27,7 @@ class Http_Handler():
     def generate_friendly_details(self, details):
         """Generate friendly details from the parsed request details."""
         return {
-            "method": details[0],
+            "method": HttpMethods.get_method(details[0]),
             "route": details[1] + "_" + details[0].lower() if details[1].find("?") == -1 else details[1].split("?")[0] + "_" + details[0].lower(),
             "version": details[2],
             "data": json.loads(details[3]) if details[0] == "POST" else None,
@@ -46,7 +49,7 @@ class Http_Handler():
         """Validate the HTTP request and handle it accordingly."""
         request_list, details = self.generate_friendly_request()
 
-        if details["method"] == "OPTIONS":
+        if details["method"].value == "OPTIONS":
             self.handle_options_request()
             return
 
@@ -58,10 +61,7 @@ class Http_Handler():
 
         if details["data"] is None:
             if details["query_params"]:
-                print(details["query_params"])
                 msg, status = route_map[details["route"]](*details["query_params"])
-
-                print(msg,  status)
             else:
                 msg, status = route_map[details["route"]]()
         else:
