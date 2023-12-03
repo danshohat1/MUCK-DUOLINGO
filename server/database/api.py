@@ -54,6 +54,8 @@ class Api:
         is_sha256 = lambda password: bool(re.compile(r'^[a-fA-F0-9]{64}$').match(password))
         print("updating user: " + new_username)
 
+        
+        print("new password: " + new_password)
         if new_password:
             new_password = Api.get_password(old_username)
         elif not is_sha256(new_password):

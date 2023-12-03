@@ -27,9 +27,10 @@ class HttpHandler():
 
     def generate_friendly_details(self, details):
         """Generate friendly details from the parsed request details."""
+        print(details[0])
         return {
             "method": HttpMethod.get_method(details[0]),
-            "path": details[1] + "_" + details[0].lower() if details[1].find("?") == -1 else details[1].split("?")[0],
+            "path": details[1] if details[1].find("?") == -1 else details[1].split("?")[0],
             "version": details[2],
             "data": json.loads(details[3]) if details[0] == "POST" else None,
             "query_params":  self.extract_query_params(details[1])
@@ -54,10 +55,13 @@ class HttpHandler():
             self.handle_options_request()
             return
 
-        route : List[Callable] = filter(lambda route: route.path == details["path"] and route.method == details["method"], Route.all)
+        print(details["path"], details["method"])
+        route : List[Route] = list(filter(lambda route: route.path == details["path"] and route.method == details["method"], Route.all.keys()))
+        print(f"routes: { route }")
         if route  == []:
             self.send("not found.", Statuses.NOT_FOUND.value)
-        route = route[0]
+            return 
+        route = Route.all.get(route[0])
 
         if details["data"] is None:
             if details["query_params"]:

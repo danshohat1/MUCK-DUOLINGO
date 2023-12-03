@@ -1,25 +1,22 @@
-from enums import HttpMethod
+from .enums import HttpMethod
 from typing import Callable
 
 class Route:
-    all = []
+    all = {
 
-    def __init__(self, func:Callable, method: HttpMethod = HttpMethod.GET, path: str = "/") -> None:
+    }
+
+    def __init__(self, method: HttpMethod = HttpMethod.GET, path: str = "/") -> None:
 
         self.method = method
         self.path = path
-        self._func = func
 
-        Route.all.append(self)
+        Route.all[self] = self.__call__
 
-    def __call__(self, *args) -> None:
-        self._func(*args)
-        
-@Route
-def muck(mc):
-    print(mc)
+    def __call__(self, func: Callable) -> None:
+        Route.all[self] = func
 
 
-print(muck("mc"))
 
-print(print(Route.all))
+
+

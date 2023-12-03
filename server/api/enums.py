@@ -13,8 +13,9 @@ class HttpMethod(Enum):
     DELETE = "DELETE"
     OPTIONS = "OPTIONS"
 
-    def get_method(method:str) -> "HttpMethods":
-        return next(_method for _method in HttpMethods if _method.value == method.upper())
+    def get_method(method:str) -> "HttpMethod":
+        print(method)
+        return next(_method for _method in HttpMethod if _method.value == method.upper())
     
 
     
