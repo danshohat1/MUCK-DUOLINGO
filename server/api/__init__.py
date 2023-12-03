@@ -1,1 +1,1 @@
-from api.http_handler import HttpHandler
+from .api import HttpHandler
