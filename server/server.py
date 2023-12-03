@@ -1,11 +1,12 @@
 import socket
 import threading
 from server_data import *
-from http_handler import Http_Handler
+from api import *
 
 def main():
-    """Main function to start the server."""
+    """Main function to start the http server."""
     Server()
+
 
 class Server:
     def __init__(self):
@@ -31,6 +32,8 @@ class Server:
         while True:
             # Accept a client connection, blocking until a connection is received
             conn, addr = self.server_socket.accept()
+
+            print("new connection")
             # Create a new thread to handle the client independently
             clnt_thread = threading.Thread(target=self.handle_single_client, args=(conn,))
             # Start the client-handling thread
@@ -39,7 +42,7 @@ class Server:
     def handle_single_client(self, client):
         """Handle a single client connection by creating an instance of the Http_Handler class."""
         # Create an instance of the Http_Handler class to handle HTTP requests from the client
-        client_http = Http_Handler(client)
+        client_http = HttpHandler(client)
 
 if __name__ == "__main__":
     """Entry point of the script, calling the main function."""

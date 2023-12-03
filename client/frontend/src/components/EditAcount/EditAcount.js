@@ -123,6 +123,8 @@ function EditAccount() {
     }
   };
 
+
+
   const handleVerificationSubmit = async () => {
     // Clear any previous errors
     setPasswordError('');
@@ -132,7 +134,7 @@ function EditAccount() {
     // Check which section is currently selected
     if (currentTab === 0) {
       // Password change verification
-      if (verificationInput === sessionStorage.getItem("username")) {
+      if (verificationInput === "SUBMIT") {
 
         axios.put(`http://localhost:8003/update_user?oldUsername=${sessionStorage.getItem("username")}&username=${sessionStorage.getItem("username")}&newPassword=${newPassword}`).then((data)=>{
           setVerificationOpen(false);
@@ -145,19 +147,23 @@ function EditAccount() {
         setVerificationError('Verification code is incorrect. Please try again.');
       }
     } else if (currentTab === 1) {
-      // Username change verification
-      await axios.get(`http://localhost:8003/password?username=${sessionStorage.getItem("username")}`).then((data)=>{
-        if (data.data[0] !== verificationInput){
-          setVerificationError('Verification code is incorrect. Please try again.');
-          return;
-        }
-        axios.put(`http://localhost:8003/update_user?oldUsername=${sessionStorage.getItem("username")}&username=${newUsername}&newPassword=${data.data[0]}`).then((data)=>{
+      if (verificationInput === "SUBMIT") {
+        console.log("here!!@@")
+        await axios.put(`http://localhost:8003/update_user?oldUsername=${sessionStorage.getItem("username")}&username=${newUsername}`).then((data)=>{
+          console.log("here1!!!!")
           setVerificationOpen(false);
           sessionStorage.setItem("username", newUsername);
 
           navigate("/main")
-       })
-      })
+       }).catch((error) => {
+        console.error("Error in second request:", error);
+        // Handle the error appropriately
+      });
+    }
+    else {
+      // Show an error that verification failed in the alert dialog
+      setVerificationError('Verification code is incorrect. Please try again.');
+    }
 
 
 
@@ -250,12 +256,10 @@ function EditAccount() {
             <DialogTitle>Verify</DialogTitle>
             <DialogContent>
               <DialogContentText>
-                {currentTab === 0
-                  ? 'Please enter the username to verify your action.'
-                  : 'Please enter the password to verify your action.'}
+                Please enter 'SUBMIT' to submit you action :)
               </DialogContentText>
               <TextField
-                label={currentTab === 0 ? 'Username' : 'Password'}
+                label= "SUBMIT"
                 fullWidth
                 variant="outlined"
                 margin="normal"
