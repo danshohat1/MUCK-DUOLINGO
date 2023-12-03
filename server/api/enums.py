@@ -3,8 +3,10 @@ from enum import Enum
 
 class Statuses(Enum):
     OK = "200 OK"
+    NOT_FOUND = "404 Not Found"
+    UNAUTHORIZED = "403 Unauthorized"
 
-class HttpMethods(Enum):
+class HttpMethod(Enum):
     GET = "GET"
     POST = "POST"
     PUT = "PUT"
