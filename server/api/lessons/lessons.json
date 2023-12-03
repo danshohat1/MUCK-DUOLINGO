@@ -1,0 +1,49 @@
+
+{
+   "1": {
+        "newWords": ["hello", "please", "thank you", "yes", "no", "sorry", "goodbye", "help", "I", "my name is"],
+        "questions": [
+            {
+                "type": "multiple choice",
+                "question": "Translate 'yes' To {LANG}",
+                "answer": "{yes}"
+            },
+            {
+                "type": "multiple choice",
+                "question": "Translate 'sorry' To {LANG}",
+                "answer": "{sorry}"
+            },
+            {
+                "type": "multiple choice",
+                "question": "Translate 'I' To {LANG}",
+                "answer": "{I}"
+            },
+            {
+                "type": "multiple choice",
+                "question": "Translate 'goodbye' To {LANG}",
+                "answer": "{goodbye}"
+            },
+            {
+                "type": "multiple choice",
+                "question": "Translate '{my_name_is}' To English",
+                "answer": "my name is"
+            },
+            {
+                "type": "multiple choice",
+                "question": "Translate '{please}' To English",
+                "answer": "please"
+            },
+            {
+                "type": "fill in",
+                "question": "{hello_my_name_is}",
+                "answer": "{username}"
+            },
+            {
+                "type": "fill in",
+                "question": "{help_me}",
+                "answer": "{please}"
+            }
+
+        ]
+   }
+}
