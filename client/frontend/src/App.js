@@ -10,7 +10,7 @@ import "./App.css";
 import {AuthProvider} from "./AuthContext"
 import EditAccount from './components/EditAcount/EditAcount';
 import PageNotFound from './components/PageNotFound/PageNotFound';
-
+import NewWordsComponent from './components/NewWords/NewWords';
 
 function App() {
   return (
@@ -30,7 +30,7 @@ function App() {
 
             <Route path = "/edit-account" element = {<EditAccount />} />
             <Route path="/video-chat/:lang" element={<VideoChat />} />
-
+            <Route path="/new-words/:lang/:level" element={<NewWordsComponent />} />
             <Route path="*" element={<PageNotFound />} />
           </Routes>
 

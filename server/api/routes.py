@@ -2,8 +2,9 @@ from database import *
 from video_chat import *
 from .enums import Statuses, HttpMethod
 from .route import Route
+from .lessons import *
 
-class RouteHandler:
+class Routes:
 
 
     @staticmethod
@@ -17,6 +18,7 @@ class RouteHandler:
     @Route(path = "/update_user", method= HttpMethod.PUT)
     def update_user_put(*args):
         """Handle the update user PUT request to modify user information."""
+
         if len(args) == 3:
             Api.update_user(args[0], args[1], args[2])
         else:
@@ -64,7 +66,7 @@ class RouteHandler:
     def join_chat_get(*args):
         """Handle the join chat GET request to create or join a chat session."""
         # Index 0 is the chat language
-        c = Chat_Handler()
+        c = ChatHandler()
 
         if c.get_chat_server_running():
             return {"io_port": c.get_chat_server_port(), "peer_port": c.get_peerjs_port()}, Statuses.OK.value  # Return the port of the chat
@@ -72,3 +74,10 @@ class RouteHandler:
         # Create a new chat session
         c.create_chat(args[0])
         return {"io_port": c.get_chat_server_port(), "peer_port": c.get_peerjs_port()}, Statuses.OK.value
+
+    @Route(path = "/new_words", method = HttpMethod.GET)
+    def new_word(*args):
+        # 0: lang , 1: level
+
+        print(f"args: {args[0]}, {args[1]}")
+        return Lesson(str(args[1]), args[0]).level_data["newWords"], Statuses.OK.value

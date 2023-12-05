@@ -1,13 +1,12 @@
 import json
 from .route_handler import *
 from urllib.parse import unquote
-from .enums import HttpMethod, Statuses
-from .route import Route
+from .enums import HttpMethods
 import threading
-from typing import List, Callable
-
 
 VERSION = "HTTP/1.1"
+
+
 
 class HttpHandler():
     def __init__(self, client_socket):
@@ -27,22 +26,21 @@ class HttpHandler():
 
     def generate_friendly_details(self, details):
         """Generate friendly details from the parsed request details."""
-        print(details[0])
         return {
-            "method": HttpMethod.get_method(details[0]),
-            "path": details[1] if details[1].find("?") == -1 else details[1].split("?")[0],
+            "method": HttpMethods.get_method(details[0]),
+            "route": details[1] + "_" + details[0].lower() if details[1].find("?") == -1 else details[1].split("?")[0] + "_" + details[0].lower(),
             "version": details[2],
             "data": json.loads(details[3]) if details[0] == "POST" else None,
             "query_params":  self.extract_query_params(details[1])
         }
 
-    def extract_query_params(self, path: str) -> List[str]:
-        """Extract query parameters from the path."""
+    def extract_query_params(self, route):
+        """Extract query parameters from the route."""
         # Assuming the query parameter is in the format "?username={username}"
         query_params = []
-        query_start_index = path.find("?")
+        query_start_index = route.find("?")
         if query_start_index != -1:
-            query_string = path[query_start_index + 1:]
+            query_string = route[query_start_index + 1:]
             query_params = [unquote(param.split("=", 1)[1].strip()) for param in query_string.split("&") if
                             "=" in param]
         return query_params
@@ -55,24 +53,22 @@ class HttpHandler():
             self.handle_options_request()
             return
 
-        print(details["path"], details["method"])
-        route : List[Route] = list(filter(lambda route: route.path == details["path"] and route.method == details["method"], Route.all.keys()))
-        print(f"routes: { route }")
-        if route  == []:
-            self.send("not found.", Statuses.NOT_FOUND.value)
-            return 
-        route = Route.all.get(route[0])
+        if details["route"] not in route_map:
+            self.send("Page not found sucker", "404 Not Found")
+            return
+        elif details["version"] != "HTTP/1.1":
+            return False
 
         if details["data"] is None:
             if details["query_params"]:
-                msg, status = route(*details["query_params"])
+                msg, status = route_map[details["route"]](*details["query_params"])
             else:
-                msg, status = route()
+                msg, status = route_map[details["route"]]()
         else:
             if details["query_params"]:
-                msg, status = route(*(tuple(details["query_params"]) + tuple(value for value in details["data"].values())))
+                msg, status = route_map[details["route"]](*(tuple(details["query_params"]) + tuple(value for value in details["data"].values())))
             else:
-                msg, status = route(*tuple(value for value in details["data"].values()))
+                msg, status = route_map[details["route"]](*tuple(value for value in details["data"].values()))
         self.send(msg, status)
 
     def send(self, msg, status):

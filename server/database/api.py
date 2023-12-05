@@ -1,6 +1,7 @@
 from .main import Datbase
 import hashlib
 import re
+from typing import Union, Dict
 
 class Api:
 
@@ -17,8 +18,7 @@ class Api:
     
 
     @staticmethod
-    def get_password(username: str):
-        print(Api.database.get_password_by_username(username)[0])
+    def get_password(username: str) -> str:
         return Api.database.get_password_by_username(username)[0]
 
     @staticmethod
@@ -38,25 +38,25 @@ class Api:
         return "User created successfully"
     
     @staticmethod
-    def home_screen_info(username:str) -> dict:
+    def home_screen_info(username:str) -> Dict:
         return Api.database.handle_home_screen(username)
     
     @staticmethod
-    def all_stages(username: str, lang: str) -> dict:
+    def all_stages(username: str, lang: str) -> Dict:
         return Api.database.get_all_stages(username, lang)
     
     @staticmethod
-    def delete_user(username: str):
+    def delete_user(username: str) -> None:
         Api.database.delete_user_by_username(username)
     
     @staticmethod
-    def update_user(old_username: str, new_username: str, new_password: str):
+    def update_user(old_username: str, new_username: str, new_password: Union[str, bool]) -> None:
         is_sha256 = lambda password: bool(re.compile(r'^[a-fA-F0-9]{64}$').match(password))
-        print("updating user: " + new_username)
+        print(f"updating user:  {new_username}" )
 
         
-        print("new password: " + new_password)
-        if new_password:
+        print(f"new password: {new_password} " )
+        if type(new_password) == bool:
             new_password = Api.get_password(old_username)
         elif not is_sha256(new_password):
             new_password = hashlib.sha256(new_password.encode("UTF-8")).hexdigest()

@@ -135,7 +135,7 @@ function EditAccount() {
     if (currentTab === 0) {
       // Password change verification
       if (verificationInput === "SUBMIT") {
-
+        console.log("new password: " + newPassword)
         axios.put(`http://localhost:8003/update_user?oldUsername=${sessionStorage.getItem("username")}&username=${sessionStorage.getItem("username")}&newPassword=${newPassword}`).then((data)=>{
           setVerificationOpen(false);
 
