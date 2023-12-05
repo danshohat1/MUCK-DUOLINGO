@@ -80,4 +80,4 @@ class Routes:
         # 0: lang , 1: level
 
         print(f"args: {args[0]}, {args[1]}")
-        return Lesson(str(args[1]), args[0]).level_data["newWords"], Statuses.OK.value
+        return Lesson(str(args[1]), args[0]).new_words, Statuses.OK.value
