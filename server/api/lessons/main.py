@@ -1,9 +1,9 @@
-   
-import re
+
 from .languages import Languages
 from .translator import Trans
 import json 
 from .generators import *
+
 LESSONS = json.load(open("api/lessons/lessons.json"))
 class Lesson:
     def __init__(self, level:int, lang:str):
