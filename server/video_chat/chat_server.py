@@ -61,8 +61,7 @@ class ChatServer:
 
             # Find the language associated with the disconnected user
             
-            user_group = list(filter(lambda group: sid in group, Group.all))[0]
-
+            user_group = [group for group in Group.all if sid in group][0]
 
             # Inform remaining users in the group
             for user_sid in user_group.members:
@@ -71,6 +70,10 @@ class ChatServer:
 
             # Remove the disconnected user from the group
             user_group -= sid
+            if len(user_group) == 0:
+                print("here")
+                Group.all.remove(user_group)
+            
 
         @sio.event
         def peer(sid, target_sid, id, username):

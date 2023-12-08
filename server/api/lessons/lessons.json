@@ -4,44 +4,19 @@
         "newWords": [{"hello": "{hello}"}, {"please": "{please}"}, {"thank you":"{thank_you}"}, {"yes": "{yes}"}, {"no": "{no}"}, {"sorry": "{sorry}"}, {"goodbye": "{goodbye}"}, {"help": "{help}"}, {"I": "{I}"}, {"my name is": "{my_name_is}"}],
         "questions": [
             {
-                "type": "multiple choice",
-                "question": "Translate 'yes' To {LANG}",
-                "answer": "{yes}"
-            },
-            {
-                "type": "multiple choice",
-                "question": "Translate 'sorry' To {LANG}",
-                "answer": "{sorry}"
-            },
-            {
-                "type": "multiple choice",
-                "question": "Translate 'I' To {LANG}",
-                "answer": "{I}"
-            },
-            {
-                "type": "multiple choice",
-                "question": "Translate 'goodbye' To {LANG}",
-                "answer": "{goodbye}"
-            },
-            {
-                "type": "multiple choice",
-                "question": "Translate '{my_name_is}' To English",
-                "answer": "my name is"
-            },
-            {
-                "type": "multiple choice",
-                "question": "Translate '{please}' To English",
-                "answer": "please"
-            },
-            {
-                "type": "fill in",
-                "question": "{hello_my_name_is}",
+                "type": "fillin",
+                "sentence": "{hello_my_name_is} ___",
                 "answer": "{username}"
             },
             {
-                "type": "fill in",
-                "question": "{help_me}",
+                "type": "fillin",
+                "sentence": "____ {help_me}",
                 "answer": "{please}"
+            },
+            {
+                "type": "multiplechoice",
+                "sentence": "_____ {my_dear_friend}",
+                "answer": "{goodbye}"
             }
 
         ]

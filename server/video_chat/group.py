@@ -22,6 +22,7 @@ class Group:
     def __isub__(self, sid: str) -> None:
         try: 
             self.members.remove(sid)
+            return self
         except ValueError:
             print(f"There is no {sid} in the group.")
 
@@ -31,7 +32,7 @@ class Group:
     def __len__(self) -> int:
         return len(self.members)
     
-    def __contains__(self, sid) -> bool:
+    def __contains__(self, sid: str) -> bool:
         return sid in self.members
     
     @staticmethod
@@ -41,6 +42,6 @@ class Group:
 
         if groups == []:
             return None
-        
+        print(groups)
         return random.choice(groups)
 

@@ -11,7 +11,7 @@ import {AuthProvider} from "./AuthContext"
 import EditAccount from './components/EditAcount/EditAcount';
 import PageNotFound from './components/PageNotFound/PageNotFound';
 import NewWordsComponent from './components/NewWords/NewWords';
-
+import  WarmUp from './components/Lesson/WarmUp.js';
 function App() {
   return (
     <Router>
@@ -31,7 +31,9 @@ function App() {
             <Route path = "/edit-account" element = {<EditAccount />} />
             <Route path="/video-chat/:lang" element={<VideoChat />} />
             <Route path="/new-words/:lang/:level" element={<NewWordsComponent />} />
+            <Route path="/warm-up/:lang/:level" element={<WarmUp />} />
             <Route path="*" element={<PageNotFound />} />
+            
           </Routes>
 
         </AuthProvider>

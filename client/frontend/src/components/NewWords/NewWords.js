@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import { Card, CardContent, Typography, Button } from '@mui/material';
 import axios from 'axios';
-// ... (other imports)
 
 const NewWordsComponent = () => {
   const [wordsData, setWordsData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const {lang, level} = useParams();
 
   useEffect(() => {
-    axios.get(`http://localhost:8003/new_words?lang=HE&level=1`).then((res) => {
+    axios.get(`http://localhost:8003/new_words?lang=${lang}&level=${level}`).then((res) => {
       console.log(res.data);
       setWordsData(res.data);
       setIsLoading(false);

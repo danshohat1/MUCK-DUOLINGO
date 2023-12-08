@@ -35,5 +35,5 @@ class Response(Request, Send):
 
         msg, status = route(*(tuple(self.details["query_params"]) + tuple(value for value in self.details["data"].values())))
     
-
+        print(type(msg))
         self.send(client_socket = self.client_socket, msg = msg, status = status)

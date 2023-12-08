@@ -29,7 +29,7 @@ class Send:
     @add_headers
     def send(**kwargs):
         """Send the HTTP response to the client."""
-        
+        print(type(kwargs["msg"]))
         kwargs["msg"] = json.dumps(kwargs["msg"])
 
         response = f"Content-Length: {len(kwargs['msg'])}\r\n"

@@ -74,10 +74,20 @@ class Routes:
         # Create a new chat session
         c.create_chat(args[0])
         return {"io_port": c.get_chat_server_port(), "peer_port": c.get_peerjs_port()}, Statuses.OK.value
-
+    
+    @staticmethod
     @Route(path = "/new_words", method = HttpMethod.GET)
     def new_word(*args):
         # 0: lang , 1: level
 
-        print(f"args: {args[0]}, {args[1]}")
         return Lesson(str(args[1]), args[0]).new_words, Statuses.OK.value
+    
+
+    @staticmethod
+    @Route(path="/warm-up", method = HttpMethod.GET)
+    def warm_up(*args):
+         # 0: lang , 1: level
+        print(type(Lesson(args[1], args[0]).warm_up()))
+        return Lesson(args[1], args[0]).warm_up(), Statuses.OK.value
+
+
