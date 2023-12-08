@@ -1,4 +1,4 @@
-import json
+
 class FillInQuestion:
     def __init__(self, sentence: str, answer: str):
         self.sentence = sentence
