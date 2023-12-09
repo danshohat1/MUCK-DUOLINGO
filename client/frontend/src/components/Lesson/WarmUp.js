@@ -9,29 +9,41 @@ import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material
 import MultipleChoiceQuestion from './MultipleChoiceQuestion';
 import { useParams } from 'react-router-dom';
 import { tryWrapperForImpl } from 'jsdom/lib/jsdom/living/generated/utils';
+import JSConfetti from 'js-confetti';
+import { ClimbingBoxLoader } from 'react-spinners';
+import { css } from '@emotion/react';
+
+
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
 
 const WarmUpComponent = () => {
   const [wordsForWarmup, setWordsForWarmup] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [round, setRound] = useState(1);
-  const [incorrectAnswers, setIncorrectAnswers] = useState([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const { lang, level } = useParams();
   const [loading, setLoading] = useState(true); 
+  let  words;
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8003/warm-up?lang=${lang}&level=${level}`);
+      console.log(response.data)
+      setWordsForWarmup(response.data);
+      setLoading(false);
+      words = response.data
+      console.log(words)
+    } catch (error) {
+      console.error('Error fetching warmup list:', error);
+    }
+  };
+
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8003/warm-up?lang=${lang}&level=${level}`);
-        console.log(response.data)
-        setWordsForWarmup(response.data);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching warmup list:', error);
-      }
-    };
-
     fetchData();
   }, [lang, level]);
 
@@ -40,27 +52,32 @@ const WarmUpComponent = () => {
     check.splice(currentQuestionIndex, 1)
     console.log(check)
     setWordsForWarmup(check);
-
+    return check;
   };
 
   const handleShowDialog = () => {
+    const confetti = new JSConfetti();
+    confetti.addConfetti()
     setDialogOpen(true);
   };
 
   const handleNextQuestion = (isCorrect) => {
+    let current = wordsForWarmup;
     if (isCorrect) {
       // Save the incorrect answer
       console.log("here2")
-      handleSaveCorrectAnswer(wordsForWarmup[currentQuestionIndex]);
+      current = handleSaveCorrectAnswer(wordsForWarmup[currentQuestionIndex]);
     }
-    console.log(wordsForWarmup[currentQuestionIndex + 1])
+    console.log(current)
     if(wordsForWarmup[currentQuestionIndex + 1] === undefined)
     {
-      if (wordsForWarmup.length === 0) {
-        // Show the dialog if it's not the first round and there are incorrect answers
-        console.log("here")
+      console.log("current: "+ current)
+      if (current.length ===0)
+      {
+        console.log("in gg ")
         handleShowDialog();
-      } else {
+      }
+      else{
         console.log("here3")
         setCurrentQuestionIndex(0);
         setRound(round + 1);
@@ -92,44 +109,56 @@ const WarmUpComponent = () => {
   };
 
   const handleAgainButtonClick = () => {
-    setRound(1);
-    setIncorrectAnswers([]);
-    setCurrentQuestionIndex(0);
-    setSelectedAnswer(null);
-    handleDialogClose();
+
+    window.location.reload()
   };
+
+  
 
   if (loading)
   {
-    return <div>Loading...</div>;
+    return <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+    <ClimbingBoxLoader color="#353BFF" loading={loading} css={override} size={40} />
+    <div style={{ marginTop: 16, fontWeight: 'bold' }}>Hold on...</div>
+    </div>
   }
 
   return (
-    <Card style={{ maxWidth: 400, margin: 'auto', marginTop: 20 }}>
-      <CardContent>
-        <Typography variant="h6">Round: {round}</Typography>
-        <MultipleChoiceQuestion
-          word={wordsForWarmup[currentQuestionIndex]}
-          onNextQuestion={handleNextQuestion}
-        />
-        {dialogOpen && (
-          <Dialog open={dialogOpen} onClose={handleDialogClose}>
-            <DialogTitle>Warm Up Passed!</DialogTitle>
-            <DialogContent>
-              <Typography>Congratulations! You have passed the warm-up.</Typography>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={handleAdvanceButtonClick} color="primary">
-                Advance
-              </Button>
-              <Button onClick={handleAgainButtonClick} color="primary">
-                Start Again
-              </Button>
-            </DialogActions>
-          </Dialog>
-        )}
-      </CardContent>
-    </Card>
+    <div>
+      {!dialogOpen && wordsForWarmup !== undefined && (
+            <Card style={{ maxWidth: 400, margin: 'auto', marginTop: 20 }}>
+            <CardContent>
+              <Typography variant="h6">Round: {round}</Typography>
+              <MultipleChoiceQuestion
+                word={wordsForWarmup[currentQuestionIndex]}
+                onNextQuestion={handleNextQuestion}
+              />
+         
+            </CardContent>
+          </Card>
+        
+      )}
+    {dialogOpen && (
+      <div>
+           <Dialog open={dialogOpen} onClose={handleDialogClose}>
+           <DialogTitle>Warm Up Passed!</DialogTitle>
+           <DialogContent>
+             <Typography>Congratulations! You have passed the warm-up.</Typography>
+           </DialogContent>
+           <DialogActions>
+             <Button onClick={handleAdvanceButtonClick} color="primary">
+               Advance
+             </Button>
+             <Button onClick={handleAgainButtonClick} color="primary">
+               Start Again
+             </Button>
+           </DialogActions>
+           </Dialog>
+          </div>
+    )}
+ 
+    </div>
+
   );
 };
 
