@@ -12,6 +12,7 @@ import EditAccount from './components/EditAcount/EditAcount';
 import PageNotFound from './components/PageNotFound/PageNotFound';
 import NewWordsComponent from './components/NewWords/NewWords';
 import  WarmUp from './components/Lesson/WarmUp.js';
+import LanguagePracticeComponent from './components/Lesson/LanguagePracticeComponnent.js';
 function App() {
   return (
     <Router>
@@ -32,6 +33,7 @@ function App() {
             <Route path="/video-chat/:lang" element={<VideoChat />} />
             <Route path="/new-words/:lang/:level" element={<NewWordsComponent />} />
             <Route path="/warm-up/:lang/:level" element={<WarmUp />} />
+            <Route path = "/:lang/:level" element = {<LanguagePracticeComponent />} />
             <Route path="*" element={<PageNotFound />} />
             
           </Routes>

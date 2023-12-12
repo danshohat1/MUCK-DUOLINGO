@@ -17,7 +17,9 @@ class Lesson:
         self.questions = [ self.translate(question) for question in self.level_data["questions"]]
 
         self.warm_up = WarmUp(self.new_words)
-        self.advaned = Advanced(self.questions, self.new_words)
+        self.advanced = Advanced(self.questions, self.new_words)
+        print(self.advanced())
+
 
 
 

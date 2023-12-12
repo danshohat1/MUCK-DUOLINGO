@@ -1,5 +1,6 @@
 import sqlite3
 
+
 class Datbase:
     def __init__(self):
         """Initialize the Database instance """
@@ -72,6 +73,43 @@ class Datbase:
 
         return stages_dic
 
+    def get_stage_data(self, username, language_code, stage):
+        
+        user_id = self.get_user_id_by_username(username)
+        
+        results = self.cur.execute(f"SELECT * FROM LanguageProgress WHERE user_id = {user_id} AND language_code = '{language_code}' AND stage = {stage};").fetchone()
+
+        column_names = [desc[0] for desc in self.cur.description]  
+
+        parsed_results = dict(zip(column_names, results))
+
+        return parsed_results
+    
+
+    def update_stage_data(self, username, language_code, stage, stage_points):
+
+        user_id = self.get_user_id_by_username(username)
+
+        self.cur.execute(f"UPDATE LanguageProgress SET stage_points = {stage_points} WHERE user_id = {user_id} AND language_code = '{language_code}' AND stage = {stage};")
+        self.con.commit()
+    
+
+    def has_stage_data(self, username, language_code, stage):
+
+        user_id = self.get_user_id_by_username(username)
+
+
+        return True if self.cur.execute(f"SELECT * FROM LanguageProgress WHERE user_id = {user_id} AND language_code = '{language_code}' AND stage = {stage};").fetchone() else False
+
+
+    def add_stage_data(self, username, language_code, stage, stage_points):
+        """Add a new stage and stage points for a user in a specific language."""
+        user_id = self.get_user_id_by_username(username)
+        self.cur.execute(f"INSERT INTO LanguageProgress (user_id, language_code, stage, stage_points) VALUES ({user_id}, '{language_code}', {stage}, {stage_points});")
+        self.con.commit()
+    
+
+
     def get_all_languages(self, id):
         """Get all distinct languages that a user is learning."""
         return self.cur.execute(f"SELECT DISTINCT language_code FROM LanguageProgress WHERE user_id = {id};")
@@ -80,6 +118,3 @@ class Datbase:
         """Close the database connection."""
         self.con.close()
 
-
-if __name__ == "__main__":
-    main()

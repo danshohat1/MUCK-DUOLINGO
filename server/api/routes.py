@@ -3,6 +3,7 @@ from video_chat import *
 from .enums import Statuses, HttpMethod
 from .route import Route
 from .lessons import *
+from typing import List, Union
 
 class Routes:
 
@@ -12,7 +13,7 @@ class Routes:
     def signup_post(*args):
         """Handle the signup POST request to create a new user."""
         
-        return Api.signup(args[0], args[1]), Statuses.OK.value
+        return Database.signup(args[0], args[1]), Statuses.OK.value
 
     @staticmethod
     @Route(path = "/update_user", method= HttpMethod.PUT)
@@ -20,9 +21,9 @@ class Routes:
         """Handle the update user PUT request to modify user information."""
 
         if len(args) == 3:
-            Api.update_user(args[0], args[1], args[2])
+            Database.update_user(args[0], args[1], args[2])
         else:
-            Api.update_user(args[0], args[1], True)
+            Database.update_user(args[0], args[1], True)
 
         return "User updated successfully", Statuses.OK.value
 
@@ -30,13 +31,13 @@ class Routes:
     @Route(path="/password", method = HttpMethod.GET)
     def password_get(*args):
         """Handle the password GET request to check user password"""
-        return Api.get_password(args[0]), Statuses.OK.value
+        return Database.get_password(args[0]), Statuses.OK.value
     
     @staticmethod
     @Route(path= "/update_user", method = HttpMethod.DELETE)
     def update_user_delete(*args):
         """Handle the update user DELETE request to delete a user."""
-        Api.delete_user(args[0])
+        Database.delete_user(args[0])
         return "User deleted successfully", Statuses.OK.value
 
     @staticmethod
@@ -44,7 +45,7 @@ class Routes:
     def login_post(*args):
         """Handle the login POST request to authenticate a user."""
         
-        return Api.login(args[0], args[1]), Statuses.OK.value
+        return Database.login(args[0], args[1]), Statuses.OK.value
     
 
 
@@ -52,14 +53,14 @@ class Routes:
     @Route(path = "/home_screen", method = HttpMethod.GET)
     def home_screen_get(*args):
         """Handle the home screen GET request to retrieve user language progress."""
-        return Api.home_screen_info(args[0]), Statuses.OK.value
+        return Database.home_screen_info(args[0]), Statuses.OK.value
     
     @staticmethod
     @Route(path = "all_stages_by_language", method= HttpMethod.GET)
     def all_stages_by_language_get(*args):
         """Handle the all stages by language GET request to retrieve all stages for a user in a specific language."""
         
-        return Api.all_stages(args[0], args[1]), Statuses.OK.value
+        return Database.all_stages(args[0], args[1]), Statuses.OK.value
 
     @staticmethod
     @Route(path = "/join_chat", method= HttpMethod.GET)
@@ -87,7 +88,20 @@ class Routes:
     @Route(path="/warm-up", method = HttpMethod.GET)
     def warm_up(*args):
          # 0: lang , 1: level
-        print(type(Lesson(args[1], args[0]).warm_up()))
         return Lesson(args[1], args[0]).warm_up(), Statuses.OK.value
+
+    @staticmethod
+    @Route(path="/advanced", method = HttpMethod.GET)
+    def warm_up(*args):
+         # 0: lang , 1: level
+        return Lesson(args[1], args[0]).advanced(), Statuses.OK.value
+
+
+    @staticmethod
+    @Route(path = "/add_stage", method = HttpMethod.POST)
+    def add_stage(*args) -> List[Union[str,HttpMethod]]:
+        # 0: username, 1: lang, 2: level, 3: points 
+        Database.add_stage_data(args[0], args[1], args[2], args[3])
+        return "Stage added successfully", Statuses.OK.value
 
 
