@@ -7,7 +7,7 @@ class MultipleChoice(ABC):
         self.answer = answer 
         self.number_of_options = number_of_options
         self.words = words
-    
+        
     def generate_options(self) -> List[str]:
         
         translations = list(map(lambda word: list(word.values())[0], self.words))

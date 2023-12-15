@@ -3,16 +3,14 @@ import axios from 'axios';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import List from '@mui/material/List';
 import Button from '@mui/material/Button';
 import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import MultipleChoiceQuestion from './MultipleChoiceQuestion';
 import { useParams } from 'react-router-dom';
-import { tryWrapperForImpl } from 'jsdom/lib/jsdom/living/generated/utils';
 import JSConfetti from 'js-confetti';
 import { ClimbingBoxLoader } from 'react-spinners';
 import { css } from '@emotion/react';
-
+import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 
 const override = css`
   display: block;
@@ -21,6 +19,8 @@ const override = css`
 `;
 
 const WarmUpComponent = () => {
+  const location = useLocation();
+  const [finishedWarmUp, setFinishedWarmUp] = useState(false);
   const [wordsForWarmup, setWordsForWarmup] = useState([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
@@ -28,8 +28,16 @@ const WarmUpComponent = () => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const { lang, level } = useParams();
   const [loading, setLoading] = useState(true); 
+  const navigate = useNavigate();
   let  words;
+
   const fetchData = async () => {
+    if (location.state === null || location.state.from !== "new-words") {
+
+      console.log("Warmup component");
+      navigate(`/new-words/${lang}/${level}`);
+    }
+  
     try {
       const response = await axios.get(`http://localhost:8003/warm-up?lang=${lang}&level=${level}`);
       console.log(response.data)
@@ -58,6 +66,7 @@ const WarmUpComponent = () => {
   const handleShowDialog = () => {
     const confetti = new JSConfetti();
     confetti.addConfetti()
+    setFinishedWarmUp(true);
     setDialogOpen(true);
   };
 
@@ -106,15 +115,12 @@ const WarmUpComponent = () => {
     // Handle advancing to the next step
     // You can implement the logic here
     handleDialogClose();
+    navigate(`/${lang}/${level}`, { state: { from: "warm-up" } });
   };
 
   const handleAgainButtonClick = () => {
-
-    window.location.reload()
+    window.location.reload();
   };
-
-  
-
   if (loading)
   {
     return <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>

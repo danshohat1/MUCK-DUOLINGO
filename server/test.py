@@ -1,4 +1,4 @@
-from database import *
+from lessons import *
 
 
-print(Database.get_stage_data("user1", "ES", 1))
+Lesson(lang = "ES", level = 1)

@@ -12,9 +12,10 @@ class Advanced(Generator):
     def generate_question(self, mold: Dict[str, Any]) -> Question:
         question = getattr(Questions, mold["type"].upper()).value
         question_type = {"type": mold["type"]}
-        if question is AdvancedMultipleChoice:
+        if question is AdvancedMultipleChoice or question is FillSentenceQuestion:
             # return the multiple choice obj
             return {**question_type, **dict(question(**dict([(key, val) for key, val in mold.items() if key!= "type"]), words=self._words))}
-
         return {**question_type, **dict(question(**dict([(key, val) for key, val in mold.items() if key!= "type"])))}
+
+
     

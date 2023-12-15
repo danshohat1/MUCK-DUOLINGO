@@ -1,0 +1,91 @@
+
+
+{
+    "1": {
+        "newWords": [
+            {
+                "hello": "{hello}"
+            },
+            {
+                "please": "{please}"
+            },
+            {
+                "thank you": "{thank_you}"
+            },
+            {
+                "yes": "{yes}"
+            },
+            {
+                "no": "{no}"
+            },
+            {
+                "good morning": "{good_morning}"
+            },
+            {
+                "good": "{good}"
+            },
+            {
+                "help": "{help}"
+            },
+            {
+                "how are you doing": "{how_are_you_doing}"
+            },
+            {
+                "my name is": "{my_name_is}"
+            }
+        ],
+        "questions": [
+            {
+                "type": "fillin",
+                "sentence": "_____, my name is.",
+                "answer": "{good_morning}"
+            },
+            {
+                "type": "multiplechoice",
+                "sentence": "Can you {help} me?",
+                "answer": "{yes}"
+            },
+            {
+                "type": "fillin",
+                "sentence": "Thank you for your ____.",
+                "answer": "{help}"
+            },
+            {
+                "type": "multiplechoice",
+                "sentence": "How are you?",
+                "answer": "{good}"
+            },
+            {
+                "type": "fillin",
+                "sentence": "____ come again.",
+                "answer": "{please}"
+            },
+            {
+                "type": "multiplechoice",
+                "sentence": "Is it Christmas now?",
+                "answer": "{no}"
+            },
+            {
+                "type": "fillin",
+                "sentence": "Let's say ____.",
+                "answer": "{goodbye}"
+            },
+            {
+                "type": "fillsentence",
+                "sentence": "{hello}, {my_name_is}",
+                "answer": "hello my_name_is"
+            },
+            {
+                "type": "multiplechoice",
+                "sentence": "Shall we start?",
+                "answer": "{yes}"
+            },
+            {
+                "type": "fillsentence",
+                "sentence": "{hello}, {how_are_you_doing}",
+                "answer": "hello how_are_you_doing"
+            }
+        ]
+    }
+}
+

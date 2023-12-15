@@ -16,7 +16,8 @@ import { styled } from '@mui/system';
 import { makeStyles } from '@mui/styles';
 import StarIcon from '@mui/icons-material/Star';
 import "./styles.css"
-
+import FillSentence from './FillSentence';
+import { useNavigate, useLocation} from 'react-router-dom';
 
 let points = 100;
 
@@ -71,13 +72,17 @@ const Alert = React.forwardRef((props, ref) => {
 
 const QuestionComponent = ({ question, onNextQuestion, round, points, setPoints}) => {
     const [selectedAnswer, setSelectedAnswer] = useState('');
+    const [answer, setAnswer] = useState([]);
     const [feedbackMessage, setFeedbackMessage] = useState('');
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [translations, setTranslations] = useState({});
     const { lang } = useParams();
-  
+
+    console.log(question)
+    
     useEffect(() => {
       // Fetch translations for each word when the component mounts
+      
       const fetchTranslations = async () => {
         try {
             console.log("here")
@@ -107,7 +112,15 @@ const QuestionComponent = ({ question, onNextQuestion, round, points, setPoints}
     };
   
     const handleSubmit = () => {
-      const isCorrect = selectedAnswer === question.answer;
+      let isCorrect
+      if (question.type !== "fillsentence"){
+        isCorrect = selectedAnswer === question.answer;
+      }
+      else{
+        console.log(question)
+        isCorrect = answer.map(word => Object.keys(word)[0]).join(" ") === question.answer;
+      }
+      
       let feedback = isCorrect && round === 1 ? " +10🤙" : ""
 
       if (!isCorrect && round === 1){
@@ -120,6 +133,7 @@ const QuestionComponent = ({ question, onNextQuestion, round, points, setPoints}
       console.log(isCorrect)
       setFeedbackMessage(isCorrect ? 'Correct!' + feedback : `Incorrect. Try again next round. The answer was ${question.answer}${feedback}`);
       setSelectedAnswer('');
+      setAnswer([])
       setSnackbarOpen(true);
 
     };
@@ -147,7 +161,7 @@ const QuestionComponent = ({ question, onNextQuestion, round, points, setPoints}
     };
   
     return (
-      <Card style={{ maxWidth: 400, margin: 'auto', textAlign: 'center', padding: 16 }}>
+      <Card style={{ maxWidth: 1000, margin: 'auto', textAlign: 'center', padding: 16 }}>
         <CardContent>
         <Typography variant="h5" style={{ marginBottom: 16 }}>
             {
@@ -162,15 +176,16 @@ const QuestionComponent = ({ question, onNextQuestion, round, points, setPoints}
               </Tooltip>
                 ))}
           </Typography>
-          {question.type === 'fillin' ? (
+          {question.type === 'fillin' &&(
             <StyledInput
               type="text"
               value={selectedAnswer}
               onChange={(e) => setSelectedAnswer(e.target.value)}
               disabled={snackbarOpen}
             />
-          ) : (
-            <List style={{ padding: 0, marginBottom: 16 }}>
+          )}
+          {question.type === "multiplechoice" &&(
+              <List style={{ padding: 0, marginBottom: 16, marginTop: 30}}>
               {question.options.map((option) => (
                 <li
                   key={option}
@@ -188,6 +203,12 @@ const QuestionComponent = ({ question, onNextQuestion, round, points, setPoints}
               ))}
             </List>
           )}
+
+          { question.type === "fillsentence" && (
+              <FillSentence data = {question} answer={answer} setAnswer={setAnswer} realAnswer = {question.answer}/> 
+          )}
+        
+            
           <Button
             variant="contained"
             color="primary"
@@ -220,8 +241,15 @@ const LanguagePracticeComponent = () => {
     const [stars, setStars] = useState(0);
 
     const [points, setPoints] = useState(100);
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const fetchData = async () => {
+    if (location.state === null || location.state.from !== "warm-up") {
+
+      console.log("Warmup component");
+      navigate(`/new-words/${lang}/${level}`);
+    }
     try {
       const response = await axios.get(`http://localhost:8003/advanced?lang=${lang}&level=${level}`);;
       setQuestions(response.data);
@@ -279,8 +307,16 @@ const LanguagePracticeComponent = () => {
     const confetti = new JSConfetti();
     confetti.addConfetti();
     setDialogOpen(true);
-    
-    setStars(2);
+    setPoints(prevPoints => Math.max(0, prevPoints))
+    if (points < 33){
+        setStars(1);
+    }
+    else if (points < 66){
+        setStars(2);
+    }
+    else {
+        setStars(3)
+    }
     document.documentElement.classList.add('shake');
 
     // Remove the shake class after the animation completes
@@ -303,14 +339,19 @@ const LanguagePracticeComponent = () => {
   }
 
   const handleBackToMain = () => {
-
   }
 
   const handleBackToWarmup = () => {
+    navigate(`/warm-up/${lang}/${level}`, {state: {from: "new-words"}});
+
   }
 
   const handleTryAgain = () => {
+    window.location.reload();
   }
+
+
+
 
   if (loading) {
     return (
@@ -325,7 +366,7 @@ const LanguagePracticeComponent = () => {
   return (
     <div>
       {!dialogOpen && questions.length > 0 && (
-        <Card style={{ maxWidth: 400, margin: 'auto', marginTop: 20 }}>
+        <Card style={{ maxWidth: 900, margin: 'auto', marginTop: 20 }}>
           <CardContent>
             <Typography variant="h6">Round: {round}</Typography>
             <QuestionComponent question={questions[currentQuestionIndex]} onNextQuestion={handleNextQuestion} round = {round} points = {points} setPoints = {setPoints}/>
@@ -336,33 +377,33 @@ const LanguagePracticeComponent = () => {
          <Dialog open={dialogOpen} onClose={handleDialogClose} className={classes.dialog}>
          <DialogTitle className={classes.title}>Lesson Passed</DialogTitle>
          <DialogContent>
-           <Typography>Congratulations! You have passed the advance section.</Typography>
+            <br/><br/>
            <Box display="flex" justifyContent="center" alignItems="center">
-          {[...Array(stars)].map((value ,index) => (
-            <AnimatedShakeStar
-            key={value}
-          />
-          ))}
-        </Box>
-      </DialogContent>
-    
+             {[...Array(stars)].map((value, index) => (
+               <AnimatedShakeStar key={value} />
+             ))}
+           </Box>
+           <center><Typography variant="h6" style={{ marginTop: 16 }}>Score: {points}</Typography></center>
+         </DialogContent>
          <DialogActions className={classes.actions}>
-           <div>
-             <Button onClick={handleBackToMain} color="primary" className={classes.button}>
+           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+             <Button onClick={handleBackToMain} color="primary" className={classes.button} style={{ minWidth: '80px' }}>
                Back to Main
              </Button>
-             <Button onClick={handleNextLesson} color="primary" className={classes.button}>
+             <Button onClick={handleNextLesson} color="primary" className={classes.button} style={{ minWidth: '120px' }}>
                Save And Continue
              </Button>
-             <Button onClick={handleBackToWarmup} color="primary" className={classes.button}>
+             <Button onClick={handleBackToWarmup} color="primary" className={classes.button} style={{ minWidth: '80px' }}>
                Back to Warmup
              </Button>
-             <Button onClick={handleTryAgain} color="primary" className={classes.button}>
+             <Button onClick={handleTryAgain} color="primary" className={classes.button} style={{ minWidth: '80px' }}>
                Try Again
              </Button>
            </div>
          </DialogActions>
        </Dialog>
+       
+       
       )}
     </div>
   );

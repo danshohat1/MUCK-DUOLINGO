@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Navigate, useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, Typography, Button } from '@mui/material';
 import axios from 'axios';
 
@@ -9,6 +9,8 @@ const NewWordsComponent = () => {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const {lang, level} = useParams();
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     axios.get(`http://localhost:8003/new_words?lang=${lang}&level=${level}`).then((res) => {
@@ -19,7 +21,8 @@ const NewWordsComponent = () => {
   }, []);
 
   const handleBeginLesson = () => {
-    console.log('Lesson started!');
+    console.log("muck")
+    navigate(`/warm-up/${lang}/${level}`, { state: { from: 'new-words' } });
   };
 
   const handleNext = () => {

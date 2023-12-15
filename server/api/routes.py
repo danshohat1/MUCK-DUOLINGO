@@ -2,7 +2,7 @@ from database import *
 from video_chat import *
 from .enums import Statuses, HttpMethod
 from .route import Route
-from .lessons import *
+from lessons import *
 from typing import List, Union
 
 class Routes:
@@ -81,20 +81,20 @@ class Routes:
     def new_word(*args):
         # 0: lang , 1: level
 
-        return Lesson(str(args[1]), args[0]).new_words, Statuses.OK.value
+        return Lesson(lang = args[0], level = args[1]).new_words, Statuses.OK.value
     
 
     @staticmethod
     @Route(path="/warm-up", method = HttpMethod.GET)
     def warm_up(*args):
          # 0: lang , 1: level
-        return Lesson(args[1], args[0]).warm_up(), Statuses.OK.value
+        return Lesson(lang = args[0], level = args[1]).warm_up(), Statuses.OK.value
 
     @staticmethod
     @Route(path="/advanced", method = HttpMethod.GET)
     def warm_up(*args):
          # 0: lang , 1: level
-        return Lesson(args[1], args[0]).advanced(), Statuses.OK.value
+        return Lesson(lang = args[0], level = args[1]).advanced(), Statuses.OK.value
 
 
     @staticmethod
