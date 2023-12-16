@@ -4,7 +4,6 @@ from typing import List
 from ..route import Route
 from ..enums import Statuses
 from .send import Send
-from ..routes import *
 
 class Response(Request, Send):
 

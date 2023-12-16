@@ -1,6 +1,6 @@
 import socket
 import threading
-from api import *
+from .models.response import Response
 
 PORT = 8003
 IP = "0.0.0.0"
@@ -40,6 +40,3 @@ class Server:
         """Handle a single client connection by creating an instance of the Http_Handler class."""
         # Create an instance of the Http_Handler class to handle HTTP requests from the client
         Response(client)
-
-if __name__ == "__main__":
-    Server()

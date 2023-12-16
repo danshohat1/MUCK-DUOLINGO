@@ -1,13 +1,17 @@
 from database import *
 from video_chat import *
-from .enums import Statuses, HttpMethod
-from .route import Route
+from api import *
 from lessons import *
 from typing import List, Union
 
-class Routes:
 
 
+def main():
+    # initiate the api server and the app.
+    Server()
+    App()
+
+class App:
     @staticmethod
     @Route(path = "/signup", method = HttpMethod.POST)
     def signup_post(*args):
@@ -103,5 +107,8 @@ class Routes:
         # 0: username, 1: lang, 2: level, 3: points 
         Database.add_stage_data(args[0], args[1], args[2], args[3])
         return "Stage added successfully", Statuses.OK.value
+
+if __name__ == "__main__":
+    main()
 
 

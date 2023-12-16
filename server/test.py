@@ -1,4 +1,10 @@
-from lessons import *
+class Example:
+    pass
 
 
-Lesson(lang = "ES", level = 1)
+
+muck = Example()
+
+muck["muck"] = "muck2"
+
+print(muck.muck)
