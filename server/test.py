@@ -1,10 +1,14 @@
-class Example:
-    pass
+from api import *
+
+key = JWTKey("1", "user1")
 
 
+@Authorizition
+def check(*args):
+    if args[0] == "authenticated":
+        print("hey it worked")
+        return
 
-muck = Example()
+    print('hey, it didnt work')
 
-muck["muck"] = "muck2"
-
-print(muck.muck)
+check(key)

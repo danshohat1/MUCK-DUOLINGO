@@ -1,7 +1,7 @@
 import sqlite3
 
 
-class Datbase:
+class Database:
     def __init__(self):
         """Initialize the Database instance """
         self.con = sqlite3.connect("./database/users.sql", check_same_thread=False)

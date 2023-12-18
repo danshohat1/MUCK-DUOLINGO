@@ -1,4 +1,3 @@
-
 from .languages import Languages
 from .translator import Trans
 import json 
@@ -6,44 +5,56 @@ from .generators import *
 from dataclasses import dataclass, field
 from typing import Dict, List
 
-
+# Load lessons data from the JSON file
 LESSONS = json.load(open("lessons/lessons.json"))
 
-
-@dataclass( kw_only= True, slots= True)
+@dataclass(kw_only=True, slots=True)
 class Lesson:
-    lang : str
-    level : int
+    """
+    Dataclass representing a language lesson.
 
-    level_data : Dict = field(init = False)
-    translate : Trans = field(init = False)
-    new_words: List[Dict[str,str]] = field(init = False)
+    Parameters:
+    - lang (str): Language of the lesson.
+    - level (int): Level of the lesson.
 
-    __questions : List[Dict] = field(init = False)
+    Attributes:
+    - level_data (Dict): Data for the lesson's level.
+    - translate (Trans): Translator instance for the lesson's language.
+    - new_words (List[Dict[str, str]]): List of new words in the lesson.
+    - __questions (List[Dict]): List of questions in the lesson.
+    - warm_up (WarmUp): Warm-up generator instance.
+    - advanced (Advanced): Advanced lesson generator instance.
+    """
 
-    warm_up : WarmUp = field(init = False)
-    advanced : Advanced = field(init = False)
+    lang: str
+    level: int
+
+    level_data: Dict = field(init=False)
+    translate: Trans = field(init=False)
+    new_words: List[Dict[str, str]] = field(init=False)
+
+    __questions: List[Dict] = field(init=False)
+
+    warm_up: WarmUp = field(init=False)
+    advanced: Advanced = field(init=False)
 
     def __post_init__(self) -> None:
+        """
+        Post-initialization method to set up lesson attributes.
+        """
+        # Convert the language string to the corresponding Languages enum
         self.lang = Languages[self.lang]
 
+        # Set up attributes using lesson data
         self.level_data = LESSONS[str(self.level)]
-        self.translate  = Trans(self.lang.name.lower())
+        self.translate = Trans(self.lang.name.lower())
 
-        # generate the new words of the lesson
-        self.new_words = [ self.translate(word) for word in self.level_data["newWords"]] 
-        # generate the questions
-        self.__questions = [ self.translate(question) for question in self.level_data["questions"]]
+        # Generate new words for the lesson
+        self.new_words = [self.translate(word) for word in self.level_data["newWords"]] 
 
-        # porvide the warm up and the lesson itself (advanced).
+        # Generate questions for the lesson
+        self.__questions = [self.translate(question) for question in self.level_data["questions"]]
+
+        # Set up warm-up and advanced lesson generators
         self.warm_up = WarmUp(self.new_words)
         self.advanced = Advanced(self.__questions, self.new_words)
-
-
-
-
-
-
-        
-
-

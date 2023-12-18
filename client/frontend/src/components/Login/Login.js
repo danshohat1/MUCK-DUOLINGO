@@ -19,7 +19,7 @@ function Login() {
 
     axios.post("http://localhost:8003/login", JSON.stringify({ username, password }))
       .then((data) => {
-        console.log("here")
+        console.log(data);
         if (data.data !== "Logged in successfully") {
           setError(data.data);
         } else {
