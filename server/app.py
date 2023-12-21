@@ -45,11 +45,20 @@ class App:
         return "User deleted successfully", Statuses.OK.value
 
     @staticmethod
+    @Authorizition
     @Route(path="/login", method = HttpMethod.POST)
     def login_post(*args):
-        """Handle the login POST request to authenticate a user."""
+        if args[0] == True:
+            return Database.login(args[1], args[2]), Statuses.OK.value
         
-        return Database.login(args[0], args[1]), Statuses.OK.value
+        result = Database.login(args[0], args[1])
+
+        key = None
+        if result == "Logged in successfully":
+            key = JWTKey(args[0])
+        print(key) 
+        result = {"msg": result, "cookies": [{"jwtkey": str(key)}]}
+        return result, Statuses.OK.value
     
 
 

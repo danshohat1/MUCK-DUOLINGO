@@ -20,7 +20,7 @@ function Login() {
       return;
     }
     
-    axios.post("http://localhost:8003/signup" , JSON.stringify({username: username, password: password})).then((data) =>{
+    axios.post("http://10.0.0.45:8003/signup" , JSON.stringify({username: username, password: password})).then((data) =>{
       if(data.data !== "User created successfully"){
         setError(data.data)
       }

@@ -12,13 +12,20 @@ class Request:
         self.__client_socket = client_socket
         self.__client_request = self.__client_socket.recv(1024).decode()
 
+        print(self.__client_request)
         self.details = self.generate_friendly_request()
     
     def generate_friendly_request(self) -> Dict[str, Any]:
         """Split the raw HTTP request into a list and generate a user-friendly request with details."""
         ret = self.__client_request.split("\r\n")
         print(ret[0].split() + [ret[-1]])
-        return self.generate_friendly_details(ret[0].split() + [ret[-1]])
+
+        # get cookies
+        cookies = list(filter(lambda header: header.startswith("Cookie: "), self.__client_request.split("\r\n")))
+        if not cookies:
+            cookies = [None]
+        return self.generate_friendly_details(ret[0].split() + [ret[-1]] + cookies)
+        
 
     def generate_friendly_details(self, details: List[str]) -> Dict[str, Any]:
 
@@ -30,7 +37,8 @@ class Request:
             "path": details[1] if details[1].find("?") == -1 else details[1].split("?")[0],
             "version": details[2],
             "data": json.loads(details[3]) if details[0] == "POST" else {},
-            "query_params":  self.extract_query_params(details[1])
+            "query_params":  self.extract_query_params(details[1]),
+            "cookies": self.parse_cookies(details[4]) if details[4] else {}
         }
 
     def extract_query_params(self, path: str) -> List[str]:
@@ -44,6 +52,17 @@ class Request:
                             "=" in param]
         return query_params
     
+    def parse_cookies(header):
+        cookies = {}
+    
+        cookie_string = header[len('Cookie: '):]
+        cookie_pairs = cookie_string.split('; ')
+
+        for pair in cookie_pairs:
+            key, value = pair.split('=')
+            cookies[key] = value
+        return cookies
+
     def __repr__(self):
         return self.details
 

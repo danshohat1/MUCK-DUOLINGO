@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../AuthContext';
 
+
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -17,12 +18,22 @@ function Login() {
   const handleLogin = () => {
     setIsLoading(true); // Set isLoading to true when the request starts
 
-    axios.post("http://localhost:8003/login", JSON.stringify({ username, password }))
+    axios.post("http://10.0.0.45:8003/login", JSON.stringify({ username, password }))
       .then((data) => {
         console.log(data);
-        if (data.data !== "Logged in successfully") {
-          setError(data.data);
+    
+        if (data.data.msg !== "Logged in successfully") {
+          setError(data.data.msg);
         } else {
+          
+          const cookies = data.data.cookies;
+          console.log(cookies)  
+          if (cookies) {
+              cookies.forEach(cookie => {
+                  document.cookie = `${Object.keys(cookie)[0]}=${Object.values(cookie)[0]}; path=/; domain=localhost;`;
+              });
+          }
+      
           login(username);
           navigate("/main");
         }

@@ -251,7 +251,7 @@ const LanguagePracticeComponent = () => {
       navigate(`/new-words/${lang}/${level}`);
     }
     try {
-      const response = await axios.get(`http://localhost:8003/advanced?lang=${lang}&level=${level}`);;
+      const response = await axios.get(`http://10.0.0.45:8003/advanced?lang=${lang}&level=${level}`);;
       setQuestions(response.data);
       setLoading(false);
     } catch (error) {
@@ -333,7 +333,7 @@ const LanguagePracticeComponent = () => {
 
   const handleNextLesson = async () => {
     console.log(points)
-    const response = await axios.post(`http://localhost:8003/add_stage `, {username: "user1", lang: lang, level: level, points: points})
+    const response = await axios.post(`http://10.0.0.45:8003/add_stage `, {username: "user1", lang: lang, level: level, points: points})
 
     console.log(response.data)
   }

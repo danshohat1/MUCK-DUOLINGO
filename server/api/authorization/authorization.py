@@ -21,7 +21,7 @@ class Authorizition:
                 return self.func(*args)
 
 
-            return self.func("authenticated")
+            return self.func(True)
         
         except:
             return self.func(*args)

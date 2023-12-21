@@ -31,8 +31,8 @@ class Response(Request, Send):
             return 
         route = Route.all.get(route[0])
 
-
-        msg, status = route(*(tuple(self.details["query_params"]) + tuple(value for value in self.details["data"].values())))
+        print(*(tuple(value for value in self.details["cookies"].values()) + tuple(self.details["query_params"]) + tuple(value for value in self.details["data"].values())))
+        msg, status = route(*(tuple(value for value in self.details["cookies"].values()) + tuple(self.details["query_params"]) + tuple(value for value in self.details["data"].values())))
     
         print(type(msg))
         self.send(client_socket = self.client_socket, msg = msg, status = status)

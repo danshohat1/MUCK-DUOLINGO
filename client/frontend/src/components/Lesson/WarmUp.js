@@ -37,9 +37,9 @@ const WarmUpComponent = () => {
       console.log("Warmup component");
       navigate(`/new-words/${lang}/${level}`);
     }
-  
+
     try {
-      const response = await axios.get(`http://localhost:8003/warm-up?lang=${lang}&level=${level}`);
+      const response = await axios.get(`http://10.0.0.45:8003/warm-up?lang=${lang}&level=${level}`);
       console.log(response.data)
       setWordsForWarmup(response.data);
       setLoading(false);
