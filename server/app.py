@@ -3,8 +3,9 @@ from video_chat import *
 from api import *
 from lessons import *
 from typing import List, Union
+from authorizations import LoginAuthorization
 
-
+login_auth = Authorization(true_case = LoginAuthorization.true_case)
 
 def main():
     # initiate the api server and the app.
@@ -16,8 +17,11 @@ class App:
     @Route(path = "/signup", method = HttpMethod.POST)
     def signup_post(*args):
         """Handle the signup POST request to create a new user."""
-        
-        return Database.signup(args[0], args[1]), Statuses.OK.value
+        response = ResponseScheme()
+
+        response.data  = Database.signup(args[0], args[1])
+
+        return response
 
     @staticmethod
     @Route(path = "/update_user", method= HttpMethod.PUT)
@@ -41,24 +45,28 @@ class App:
     @Route(path= "/update_user", method = HttpMethod.DELETE)
     def update_user_delete(*args):
         """Handle the update user DELETE request to delete a user."""
+        response = ResponseScheme()
+
         Database.delete_user(args[0])
-        return "User deleted successfully", Statuses.OK.value
+        response.data = "User deleted successfully"
+        return response
+    
+    @staticmethod
+    @Route(path="/authorized-login", method = HttpMethod.POST, authorization = login_auth)
+    def authorized_login(*args):
+        pass
 
     @staticmethod
-    @Authorizition
     @Route(path="/login", method = HttpMethod.POST)
-    def login_post(*args):
-        if args[0] == True:
-            return Database.login(args[1], args[2]), Statuses.OK.value
-        
-        result = Database.login(args[0], args[1])
+    def login(*args):
+        response = ResponseScheme()
 
-        key = None
-        if result == "Logged in successfully":
-            key = JWTKey(args[0])
-        print(key) 
-        result = {"msg": result, "cookies": [{"jwtkey": str(key)}]}
-        return result, Statuses.OK.value
+
+        result = Database.login(args[0], args[1])
+        response.data = result
+        response.set_cookie({"token": login_auth.token(username=args[0])})
+    
+        return response
     
 
 

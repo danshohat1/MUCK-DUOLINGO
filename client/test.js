@@ -5,12 +5,8 @@ const axios = require('axios').default;
 async function main(){
 
 
-   await axios.get("http://localhost:8003/join_chat?lang=en").then((data) =>{
-      console.log(data)
-   })
-
-   await axios.get("http://localhost:8003/join_chat?lang=sp").then((data) =>{
-      console.log(data)
+   await axios.post("http://localhost:8003/", {authorization_key: "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3MDQxMjc0MzksInVzZXJuYW1lIjoidXNlcjEiLCJhZ2UiOjE3fQ.MGMtDGxzaFliAEs8pUYcEYato5w_nIDsiU4Dh7xMZIk", muck: "1234"}).then((res) =>{
+      console.log(res.data)
    })
 
 }

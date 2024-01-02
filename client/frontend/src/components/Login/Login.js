@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, Container, CssBaseline, TextField, Typography, Grid, Link as MuiLink, Box, Avatar, Paper, Alert, CircularProgress } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import axios from 'axios';
@@ -18,12 +18,12 @@ function Login() {
   const handleLogin = () => {
     setIsLoading(true); // Set isLoading to true when the request starts
 
-    axios.post("http://10.0.0.45:8003/login", JSON.stringify({ username, password }))
+    axios.post("http://localhost:8003/login", JSON.stringify({ username, password }))
       .then((data) => {
         console.log(data);
     
-        if (data.data.msg !== "Logged in successfully") {
-          setError(data.data.msg);
+        if (data.data.data !== "Logged in successfully") {
+          setError(data.data);
         } else {
           
           const cookies = data.data.cookies;

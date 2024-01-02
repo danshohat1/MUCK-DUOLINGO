@@ -9,7 +9,7 @@ class AdvancedMultipleChoice(MultipleChoice):
         super().__init__(answer, number_of_options, words)
         self.sentence = sentence
     
-    def __iter__(self) -> Dict:
+    def __iter__(self):
         yield "sentence",  self.sentence
         yield "options", self.generate_options()
         yield "answer", self.answer

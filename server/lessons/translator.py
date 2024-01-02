@@ -21,7 +21,8 @@ class Trans:
         Parameters:
         - dst (str): Destination language code.
         """
-        self.translator = Translator(to_lang=dst)
+        self.dst = dst
+        self.translator = Translator(to_lang=self.dst)
         self.pattern = r'\{(\w+)\}'
 
     def __call__(self, to_translate: Union[str, Dict]) -> Union[str, Dict]:

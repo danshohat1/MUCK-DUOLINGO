@@ -1,5 +1,6 @@
 from .enums import HttpMethod
-from typing import Callable
+from typing import Callable, Optional
+from .authorization import Authorization
 
 class Route:
     # Class to define routes and associate them with corresponding functions
@@ -7,7 +8,7 @@ class Route:
     # Dictionary to store all routes and their associated functions
     all = {}
 
-    def __init__(self, method: HttpMethod = HttpMethod.GET, path: str = "/") -> None:
+    def __init__(self, method: HttpMethod = HttpMethod.GET, path: str = "/", authorization: Optional[Authorization] = None) -> None:
         """
         Initialize a new Route instance.
 
@@ -17,6 +18,11 @@ class Route:
         """
         self.method = method
         self.path = path
+        self.authorization = authorization
+
+        if self.authorization and self.method != HttpMethod.POST:
+            raise Exception("Authorization must be in POST method")
+        
 
         # Register the route and associate it with the __call__ method
         Route.all[self] = self.__call__

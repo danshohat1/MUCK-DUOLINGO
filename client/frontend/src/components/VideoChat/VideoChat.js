@@ -23,7 +23,7 @@ const VideoCallComponent = () => {
       )
     }
   
-    const res = await axios.get(`http://10.0.0.45:8003/join_chat?lang=${lang}`);
+    const res = await axios.get(`http://10.20.72.130:8003/join_chat?lang=${lang}`);
     const { io_port, peer_port } = res.data;
 
     const myPeer = new Peer(undefined, {
@@ -168,7 +168,7 @@ const VideoCallComponent = () => {
 
     myPeer.on('open', async (id) => {
       const stream = await waitForVariable();
-      socket = io.connect(`http://10.0.0.45:${io_port}`);
+      socket = io.connect(`http://10.20.72.130:${io_port}`);
       handleSocketEvents();
     });
 

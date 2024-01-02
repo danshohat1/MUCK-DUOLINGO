@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, {useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -7,6 +7,9 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import { makeStyles } from '@mui/styles';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../AuthContext';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -44,7 +47,40 @@ const useStyles = makeStyles((theme) => ({
 
 function LandPage() {
   const classes = useStyles();
-
+  const { login } = useAuth();
+  const navigate = useNavigate();
+    // Function to get cookie by name
+    const getCookie = (name) => {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    };
+  
+    // Function to handle JWT token verification
+    const verifyToken = async () => {
+      const jwtToken = getCookie('token');
+      console.log("here")
+      if (jwtToken) {
+        // Send POST request with JWT token
+        await axios.post("http://127.0.0.1:8003/authorized-login", {"authorization_key": jwtToken})
+        .then((response) => {
+          console.log(response.data)
+          if(response.data.data ===  "Logged in successfully"){
+            console.log("here2")
+            login(response.data.username);
+            navigate("/main");
+          }
+        })
+        .catch((error) => {
+          // Handle error (e.g., token invalid or expired)
+          console.error("Token verification failed:", error);
+        });
+      }
+    };
+  
+    useEffect(() => {
+      verifyToken();
+    }, []);
   return (
     <Container maxWidth="lg" className={classes.container}>
       <Grid container justifyContent="center">

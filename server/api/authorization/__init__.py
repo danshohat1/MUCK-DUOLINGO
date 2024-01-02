@@ -1,1 +1,1 @@
-from .authorization import Authorizition, JWTKey
+from .authorization import Authorization, JWTKey

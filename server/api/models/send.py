@@ -3,17 +3,20 @@ import jwt
 import datetime
 
 class Send:
-
-    SECRET_KEY = 'your_secret_key'  # Update with your actual secret key
-
+    
     @staticmethod
     def add_headers(func):
         def wrapper(**kwargs):
+
+            origin = kwargs.get("origin", "*")
+            if origin == "127.0.0.1":
+                origin = "localhost"
             response = f"HTTP/1.1 {kwargs['status']}\r\n"
             response += "Access-Control-Allow-Credentials: true\r\n"
             response += "Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS\r\n"
             response += "Access-Control-Allow-Headers: Content-Type, Authorization\r\n"
-            response += "Access-Control-Allow-Origin: http://localhost:3000\r\n"
+            response += f"Access-Control-Allow-Origin: http://{origin}:3000\r\n"
+            response += "Access-Control-Max-Age: 86400\r\n"
             response += func(**kwargs)
 
             kwargs["client_socket"].send(response.encode())
@@ -39,10 +42,9 @@ class Send:
                 "cookies": cookies
             }
         else:
-            response_body = result
-
+            response_body = result 
+        print(response_body)
         json_response = json.dumps(response_body)
-
         response = f"Content-Length: {len(json_response)}\r\n"
         response += "Content-Type: application/json\r\n"
         response += "\r\n"
@@ -53,4 +55,4 @@ class Send:
     @add_headers
     def send_options(**kwargs):
         """Handle an OPTIONS request by responding with CORS headers."""
-        return ""
+        return "options response"

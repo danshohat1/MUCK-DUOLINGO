@@ -13,7 +13,7 @@ const NewWordsComponent = () => {
 
 
   useEffect(() => {
-    axios.get(`http://10.0.0.45:8003/new_words?lang=${lang}&level=${level}`).then((res) => {
+    axios.get(`http://10.20.72.130:8003/new_words?lang=${lang}&level=${level}`).then((res) => {
       console.log(res.data);
       setWordsData(res.data);
       setIsLoading(false);

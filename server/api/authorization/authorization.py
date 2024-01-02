@@ -1,44 +1,58 @@
 import jwt
-from typing import Callable, Union, Dict
+from typing import Union, Dict, Callable, Optional
 from datetime import datetime, timedelta
-from dataclasses import dataclass, field
+from ..response_scheme import ResponseScheme
+import secrets
+from .jwt_key import JWTKey
+import inspect
 
 SECRET_KEY = "hey_you_found_me"
 
-class Authorizition:
+class Authorization:
+    def __init__(self, true_case: Callable = lambda arg: None, false_case: Callable = lambda: None) -> None:
+  
+        if len(inspect.signature(true_case).parameters) != 1:
+            raise TypeError(f"The true_case function must have one parameter (dict type). got {len(inspect.signature(true_case).parameters)}")
 
-    def __init__(self, func: Callable):
-        self.func = func
+        if len(inspect.signature(false_case).parameters) != 0:
+            raise TypeError(f"The false_case function must have no parameters. got {len(inspect.signature(true_case).parameters)}")
 
-    def __call__(self, *args) -> Union[bool, Dict]: 
-        try:
+        self.true_case = true_case
+        self.false_case = false_case
+        self.secret_key = secrets.token_hex(32)
+
+    def token(self, **kwargs) -> str:
+        for key in kwargs.keys():
+            if key == "exp":
+                raise Exception("'exp' is not a valid name for token arg.")
             
-            decoded_token = jwt.decode(str(args[0]), SECRET_KEY, algorithms=["HS256"])
-            print(decoded_token)
+        return str(JWTKey(self.secret_key, **kwargs))
+    
+    def false_res(self) -> bool: 
+        res =  self.false_case()
+        if isinstance(res, ResponseScheme):
+            return res
+    
+    def true_res(self, data) -> bool:
+        res =  self.true_case(data)
+        if isinstance(res, ResponseScheme):
+            return res
+    
+    def check_authorization(self, key) -> Optional[ResponseScheme]: 
+        try:
+            decoded_token = jwt.decode(str(key), self.secret_key, algorithms=["HS256"])
             expiration_time = datetime.utcfromtimestamp(decoded_token["exp"])
-
+        
             if datetime.utcnow() > expiration_time:
-                return self.func(*args)
-
-
-            return self.func(True)
+            
+                return self.false_res()
+            
+        
+            return self.true_res(dict([(key, val) for key, val in decoded_token.items() if key != "exp"]))
         
         except:
-            return self.func(*args)
+            return self.false_res()
 
-
-@dataclass
-class JWTKey:
-    username: str 
-
-    def __str__(self) -> str:
-        payload = {
-            "username": self.username,
-            "exp": datetime.utcnow() + timedelta(minutes=30)
-
-        }
-
-        return jwt.encode(payload, SECRET_KEY, algorithm="HS256")
 
         
 

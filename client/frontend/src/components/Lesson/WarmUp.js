@@ -39,7 +39,7 @@ const WarmUpComponent = () => {
     }
 
     try {
-      const response = await axios.get(`http://10.0.0.45:8003/warm-up?lang=${lang}&level=${level}`);
+      const response = await axios.get(`http://10.0.0.28:8003/warm-up?lang=${lang}&level=${level}`);
       console.log(response.data)
       setWordsForWarmup(response.data);
       setLoading(false);

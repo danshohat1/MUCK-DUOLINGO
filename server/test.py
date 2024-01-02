@@ -1,14 +1,41 @@
 from api import *
 
-key = JWTKey("1", "user1")
 
 
-@Authorizition
-def check(*args):
-    if args[0] == "authenticated":
-        print("hey it worked")
-        return
 
-    print('hey, it didnt work')
+def true_case(data):
 
-check(key)
+    response = ResponseScheme()
+
+    response.data = "hello " + data["username"]
+
+    return response
+
+def false_case():
+    print("false has been raised")
+
+auth = Authorization(true_case=true_case, false_case=false_case)
+def main():
+    print(auth.token(username="user1", age = 17))
+    Server()
+    App()
+    
+   
+    
+
+class App:
+    @staticmethod
+    @Route(path="/", method = HttpMethod.POST, authorization= auth)
+    def example(*args):
+        print(args)
+        response = ResponseScheme()
+
+        response.data = "Hello World!"
+
+        return response
+    
+
+
+if __name__ == "__main__":
+    main()
+

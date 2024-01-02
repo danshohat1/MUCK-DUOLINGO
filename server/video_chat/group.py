@@ -92,7 +92,7 @@ class Group:
         groups = [group for group in Group.all if group._lang == lang and len(group) < MAX_MEMBERS_IN_GROUP]
 
         # Check if there are any matching groups
-        if groups == []:
+        if not groups:
             return None
 
         # Return a random group from the filtered list

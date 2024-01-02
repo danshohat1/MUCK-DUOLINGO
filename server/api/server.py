@@ -1,7 +1,7 @@
 import socket
 import threading
 from .models.response import Response
-
+from typing import Tuple
 PORT = 8003
 IP = "0.0.0.0"
 
@@ -29,14 +29,13 @@ class Server:
         while True:
             # Accept a client connection, blocking until a connection is received
             conn, addr = self.server_socket.accept()
-
             print("new connection")
             # Create a new thread to handle the client independently
-            clnt_thread = threading.Thread(target=self.handle_single_client, args=(conn,))
+            clnt_thread = threading.Thread(target=self.handle_single_client, args=(conn,addr))
             # Start the client-handling thread
             clnt_thread.start()
 
-    def handle_single_client(self, client):
+    def handle_single_client(self, client: socket, addr: Tuple[str, int]) -> None:
         """Handle a single client connection by creating an instance of the Http_Handler class."""
         # Create an instance of the Http_Handler class to handle HTTP requests from the client
-        Response(client)
+        Response(client, addr)
