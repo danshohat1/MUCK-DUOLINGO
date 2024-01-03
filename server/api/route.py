@@ -10,7 +10,7 @@ class Route:
 
     def __init__(self, method: HttpMethod = HttpMethod.GET, path: str = "/", authorization: Optional[Authorization] = None) -> None:
         """
-        Initialize a new Route instance.
+        Initialize a new Route insatance.
 
         Parameters:
         - method (HttpMethod): The HTTP method associated with the route (default is GET).
@@ -19,10 +19,8 @@ class Route:
         self.method = method
         self.path = path
         self.authorization = authorization
-
         if self.authorization and self.method != HttpMethod.POST:
             raise Exception("Authorization must be in POST method")
-        
 
         # Register the route and associate it with the __call__ method
         Route.all[self] = self.__call__

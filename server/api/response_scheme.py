@@ -1,5 +1,5 @@
 from .enums import Statuses
-from typing import Any, List, Dict, Optional, Self,TypeVar
+from typing import Any, List, Dict,TypeVar
 
 Authorization = TypeVar("Authorization")
 

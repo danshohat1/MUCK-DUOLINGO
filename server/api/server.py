@@ -9,7 +9,8 @@ class Server:
     def __init__(self):
         """Initialize the server by creating and configuring the server socket, then start handling clients."""
         self.server_socket = self.initiate_server()
-        self.handle_clients()
+        threading.Thread(target=self.handle_clients).start()
+        
 
     def initiate_server(self):
         """Create and configure the server socket."""

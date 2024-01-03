@@ -6,18 +6,19 @@ from ..enums import Statuses
 from .send import Send
 from ..response_scheme import ResponseScheme
 import warnings
-AUTHORIZATION_REQUEST_PARAM = "authorization_key"
-class Response(Request, Send):
 
+AUTHORIZATION_REQUEST_PARAM = "authorization_key"
+
+class Response(Request, Send):
     def __init__(self, client_socket: socket, addr: Tuple[str, int]):
         self.client_socket = client_socket
         self.origin = addr[0]
         super().__init__(client_socket)
 
-        self.validate_http_request()
+        self.handle_http_request()
 
 
-    def validate_http_request(self):
+    def handle_http_request(self):
         """Validate the HTTP request and handle it accordingly."""
 
         if self.details["method"].value == "OPTIONS":
@@ -53,7 +54,8 @@ class Response(Request, Send):
     def call_route(self, route):
         try: 
             route = Route.all.get(route)
-            response = route(*(tuple(value for value in self.details["cookies"].values()) + tuple(self.details["query_params"]) + tuple(value for key, value in self.details["data"].items() if key.lower() != AUTHORIZATION_REQUEST_PARAM)))
+            print(*(list(self.details["cookies"].values()) +self.details["query_params"] + [value for key, value in self.details["data"].items() if key.lower() != AUTHORIZATION_REQUEST_PARAM]))
+            response = route(*(list(self.details["cookies"].values()) +self.details["query_params"] + [value for key, value in self.details["data"].items() if key.lower() != AUTHORIZATION_REQUEST_PARAM]))
             self.send(client_socket = self.client_socket, msg = response.data, status = response.status.value, cookies = response.cookies, origin = self.origin)
         except: 
             warnings.warn(f"{route.__name__} should return a ResponseScheme type", RuntimeWarning)

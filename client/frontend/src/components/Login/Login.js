@@ -23,7 +23,7 @@ function Login() {
         console.log(data);
     
         if (data.data.data !== "Logged in successfully") {
-          setError(data.data);
+          setError(data.data.data);
         } else {
           
           const cookies = data.data.cookies;

@@ -61,7 +61,6 @@ class App:
     def login(*args):
         response = ResponseScheme()
 
-
         result = Database.login(args[0], args[1])
         response.data = result
         response.set_cookie({"token": login_auth.token(username=args[0])})
