@@ -39,11 +39,7 @@ class ResponseScheme:
         self._cookies.append(cookie)
     
 
-
-    def __iter__(self):
-        yield "status", self._status
-        yield "data", self._data
-        yield "cookies", self._cookies
+    
 
 
 

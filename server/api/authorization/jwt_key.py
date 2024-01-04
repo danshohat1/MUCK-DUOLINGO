@@ -13,7 +13,7 @@ class JWTKey:
 
     
         payload = {
-            "exp": datetime.utcnow() + timedelta(minutes=1)
+            "exp": datetime.utcnow() + timedelta(minutes=10)
         }
 
         for key, value in self.__dict__.items():
@@ -21,3 +21,4 @@ class JWTKey:
                 payload[key] = value
 
         return jwt.encode(payload, self.secret_key, algorithm="HS256")
+

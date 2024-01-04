@@ -9,8 +9,7 @@ class LoginAuthorization:
        username = data.get("username")
        if not username:
            return
-       print(data)
-       
+              
        if Database.check_username_exists(username):
            response.data = {"data": "Logged in successfully", "username": username}
            return response

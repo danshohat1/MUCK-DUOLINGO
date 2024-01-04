@@ -12,26 +12,26 @@ class Request:
         self.__client_socket = client_socket
         self.__client_request = self.__client_socket.recv(1024).decode()
 
-        print(self.__client_request)
         self.details = self.generate_friendly_request()
     
     def generate_friendly_request(self) -> Dict[str, Any]:
         """Split the raw HTTP request into a list and generate a user-friendly request with details."""
         ret = self.__client_request.split("\r\n")
-        print(ret[0].split() + [ret[-1]])
 
         # get cookies
         cookies = list(filter(lambda header: header.startswith("Cookie: "), self.__client_request.split("\r\n")))
         if not cookies:
             cookies = [None]
+        
+
         return self.generate_friendly_details(ret[0].split() + [ret[-1]] + cookies)
         
 
     def generate_friendly_details(self, details: List[str]) -> Dict[str, Any]:
 
-        print(f"here {details}")
-
         """Generate friendly details from the parsed request details."""
+        if not details[0] or not details[1] or not details[3]:
+            return 
         return {
             "method": HttpMethod.get_method(details[0]),
             "path": details[1] if details[1].find("?") == -1 else details[1].split("?")[0],

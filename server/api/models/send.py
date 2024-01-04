@@ -43,7 +43,6 @@ class Send:
             }
         else:
             response_body = result 
-        print(response_body)
         json_response = json.dumps(response_body)
         response = f"Content-Length: {len(json_response)}\r\n"
         response += "Content-Type: application/json\r\n"

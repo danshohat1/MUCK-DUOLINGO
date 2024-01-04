@@ -26,4 +26,7 @@ class HttpMethod(Enum):
         Returns:
         - HttpMethod: Corresponding HttpMethod enum.
         """
-        return next(_method for _method in HttpMethod if _method.value == method.upper())
+        try: 
+            return next(_method for _method in HttpMethod if _method.value == method.upper())
+        except StopIteration:
+            return None
