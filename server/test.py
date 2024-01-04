@@ -1,5 +1,4 @@
 from api import *
-from api.app import App
 from database import *
 from authorizations import LoginAuthorization
 
