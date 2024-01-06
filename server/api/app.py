@@ -23,7 +23,7 @@ class App(Server):
     def route(self, method: HttpMethod = HttpMethod.GET, path: str = "/", authorization: Optional[Authorization] = None):
         if not authorization:
             authorization = self.authorization
-            
+
         def wrapper(func):
 
             route = Route(func, method, path, authorization)
@@ -34,6 +34,7 @@ class App(Server):
         """Handle a single client connection by creating an instance of the Http_Handler class."""
         # Create an instance of the Http_Handler class to handle HTTP requests from the client
         Response(self, client, addr, self.cors)
+        self.cors = Cors()
 
 
         

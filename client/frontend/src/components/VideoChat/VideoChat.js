@@ -3,7 +3,7 @@ import { useParams,  useNavigate } from 'react-router-dom';
 import Peer from 'peerjs';
 import { io } from 'https://cdn.socket.io/4.4.1/socket.io.esm.min.js';
 import axios from 'axios';
-
+import findHostname from '../../FindIp';
 
 const VideoCallComponent = () => {
   const localVideoRef = useRef(null);
@@ -22,10 +22,9 @@ const VideoCallComponent = () => {
         navigate("/login")
       )
     }
-  
-    const res = await axios.get(`http://10.20.72.130:8003/join_chat?lang=${lang}`);
+    const res = await axios.get(`http://${findHostname()}:8003/join_chat?lang=${lang}`);
+    console.log(res)
     const { io_port, peer_port } = res.data;
-
     const myPeer = new Peer(undefined, {
       host: '/',
       port: peer_port,
@@ -168,7 +167,7 @@ const VideoCallComponent = () => {
 
     myPeer.on('open', async (id) => {
       const stream = await waitForVariable();
-      socket = io.connect(`http://10.20.72.130:${io_port}`);
+      socket = io.connect(`http://${findHostname()}:${io_port}`);
       handleSocketEvents();
     });
 

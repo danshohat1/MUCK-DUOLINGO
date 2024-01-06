@@ -30,7 +30,7 @@ class Request:
     def generate_friendly_details(self, details: List[str]) -> Dict[str, Any]:
 
         """Generate friendly details from the parsed request details."""
-        if not details[0] or not details[1] or not details[3]:
+        if not details[0] or not details[1] or not details[2]:
             return 
         return {
             "method": HttpMethod.get_method(details[0]),

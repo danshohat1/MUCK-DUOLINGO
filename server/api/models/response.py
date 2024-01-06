@@ -22,7 +22,6 @@ class Response(Request, Send):
         self.cors = cors
 
         super().__init__(client_socket)
-
         if not self.details:
             return
         
@@ -31,9 +30,10 @@ class Response(Request, Send):
 
     def handle_http_request(self):
         """Validate the HTTP request and handle it accordingly."""
-
         if self.details["method"].value == "OPTIONS":
-            self.send_options(client_socket = self.client_socket, status = Statuses.OK.value, origin = self.origin)
+            response = ResponseScheme()
+            self.handle_cors(response)
+            self.send(client_socket = self.client_socket, msg = response.data, status = response.status.value, cookies = response.cookies, cors = self.cors)
             return
 
         route : List[Route] = list(filter(lambda route: route.path == self.details["path"] and route.method == self.details["method"], self.app.routes.keys()))
@@ -59,19 +59,14 @@ class Response(Request, Send):
 
 
         self.call_route(route)       
+    
+    def handle_cors(self, response: ResponseScheme) -> None:
+        if response.cors: 
+            self.cors = response.cors
 
     def send_prompt(self, response: ResponseScheme) -> None:
-        cors = self.cors
-        if response.cors: 
-            cors = response.cors
-        
-        if "*" in cors.trusted_urls:
-            if self.origin == "127.0.0.1":
-                self.origin = "localhost"
-            
-            cors.trusted_urls = [f"http://{self.origin}:3000"]
-        
-        self.send(client_socket = self.client_socket, msg = response.data, status = response.status.value, cookies = response.cookies, cors = cors)
+        self.handle_cors(response)
+        self.send(client_socket = self.client_socket, msg = response.data, status = response.status.value, cookies = response.cookies, cors = self.cors)
         print(ResponsePrompt( response.status, self.details["method"], self.origin, self.details["path"]))
         
 

@@ -4,7 +4,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../AuthContext';
-
+import findHostname from '../../FindIp';
 
 function Login() {
   const [username, setUsername] = useState('');
@@ -18,14 +18,14 @@ function Login() {
   const handleLogin = () => {
     setIsLoading(true); // Set isLoading to true when the request starts
 
-    axios.post("http://localhost:8003/login", JSON.stringify({ username, password }))
+    axios.post(`http://${findHostname()}:8003/login`, JSON.stringify({ username, password }))
       .then((data) => {
         console.log(data);
     
         if (data.data.data !== "Logged in successfully") {
           setError(data.data.data);
         } else {
-          
+          console.log(data.data)
           const cookies = data.data.cookies;
           console.log(cookies)  
           if (cookies) {

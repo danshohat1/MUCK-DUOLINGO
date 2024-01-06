@@ -12,6 +12,7 @@ app = App(port=8003)
 
 def main():
     # initiate the app.
+    app.run()
     MuckApp()
 
 class MuckApp:
@@ -89,15 +90,16 @@ class MuckApp:
     def join_chat_get(*args):
         """Handle the join chat GET request to create or join a chat session."""
         # Index 0 is the chat language
+        response = ResponseScheme()
         c = ChatHandler()
-
+        print("here")
         if c.get_chat_server_running():
-            return {"io_port": c.get_chat_server_port(), "peer_port": c.get_peerjs_port()}, Statuses.OK.value  # Return the port of the chat
-
+            response.data =  {"io_port": c.get_chat_server_port(), "peer_port": c.get_peerjs_port()}
+            return response
         # Create a new chat session
         c.create_chat(args[0])
-        return {"io_port": c.get_chat_server_port(), "peer_port": c.get_peerjs_port()}, Statuses.OK.value
-    
+        response.data = {"io_port": c.get_chat_server_port(), "peer_port": c.get_peerjs_port()}
+        return response
     @staticmethod
     @app.route(path = "/new_words", method = HttpMethod.GET)
     def new_word(*args):
