@@ -1,19 +1,26 @@
 from .request import Request
 from socket import socket
-from typing import List, Tuple
+from typing import List, Tuple, TypeVar
 from ..route import Route
-from ..enums import Statuses, HttpMethod
+from ..enums import Statuses
 from .send import Send
 from ..response_scheme import ResponseScheme
 import warnings
-from ..prompts import ResponsePrompt
+from ..prompts import ResponsePrompt, ExceptionPrompt, ExceptionTypes
+from ..cors import Cors
+import sys
+
 AUTHORIZATION_REQUEST_PARAM = "authorization_key"
 
+App = TypeVar("App")
+
 class Response(Request, Send):
-    def __init__(self, app, client_socket: socket, addr: Tuple[str, int]):
+    def __init__(self, app: App, client_socket: socket, addr: Tuple[str, int], cors: Cors):
         self.client_socket = client_socket
         self.origin = addr[0]
         self.app = app
+        self.cors = cors
+
         super().__init__(client_socket)
 
         if not self.details:
@@ -40,8 +47,9 @@ class Response(Request, Send):
             key = [val for key, val in self.details["data"].items() if key.lower() == AUTHORIZATION_REQUEST_PARAM]
 
             if not key:
-                raise Exception("Route with authorization must have an authorization key in the params")
-            
+                print(ExceptionPrompt("Route with authorization must have an authorization key in the params", ExceptionTypes.RUNTIME))
+                sys.exit()
+
             key = key[0]
 
             response = route.authorization.check_authorization(key)
@@ -53,7 +61,17 @@ class Response(Request, Send):
         self.call_route(route)       
 
     def send_prompt(self, response: ResponseScheme) -> None:
-        self.send(client_socket = self.client_socket, msg = response.data, status = response.status.value, cookies = response.cookies, origin = self.origin)
+        cors = self.cors
+        if response.cors: 
+            cors = response.cors
+        
+        if "*" in cors.trusted_urls:
+            if self.origin == "127.0.0.1":
+                self.origin = "localhost"
+            
+            cors.trusted_urls = [f"http://{self.origin}:3000"]
+        
+        self.send(client_socket = self.client_socket, msg = response.data, status = response.status.value, cookies = response.cookies, cors = cors)
         print(ResponsePrompt( response.status, self.details["method"], self.origin, self.details["path"]))
         
 

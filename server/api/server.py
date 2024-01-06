@@ -7,11 +7,12 @@ IP = "0.0.0.0"
 
 class Server:
     def __init__(self, port: int):
-        """Initialize the server by creating and configuring the server socket, then start handling clients."""
-        self.server_socket = self.initiate_server(port)
+        self.port = port
+    
+    def run(self): 
+        self.server_socket = self.initiate_server(self.port)
         threading.Thread(target=self.handle_clients).start()
-        
-
+    
     def initiate_server(self, port):
         """Create and configure the server socket."""
         # Create a socket using IPv4 and TCP

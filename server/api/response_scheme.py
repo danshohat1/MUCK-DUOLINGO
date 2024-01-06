@@ -1,42 +1,21 @@
 from .enums import Statuses
-from typing import Any, List, Dict,TypeVar
+from typing import Any, List, Dict,TypeVar, Optional
+from .cors import Cors
+from dataclasses import dataclass, field
 
 Authorization = TypeVar("Authorization")
 
-from dataclasses import dataclass, field
 @dataclass()
 class ResponseScheme:
 
-    _data: Any = None
-    _status: Statuses = Statuses.OK
-    _cookies: List[Dict[str, Any]] = field(default_factory=list)
+    data: Any = None
+    status: Statuses = Statuses.OK
+    cookies: List[Dict[str, Any]] = field(default_factory=list)
+    cors: Optional[Cors]= None
     
-    #region getters and setters
-    @property
-    def data(self) -> Any:
-        return self._data
-    @data.setter
-    def data(self, val: Any) -> None:
-        self._data = val
-
-    @property
-    def status(self) -> Statuses:
-        return self._status
-    @status.setter
-    def status(self, val: Statuses) -> None:
-        self._status = val
-
-    @property
-    def cookies(self) -> List[Dict[str, Any]]:
-        return self._cookies
-    @cookies.setter
-    def cookies(self, val: List[Dict[str, Any]]) -> None:
-        self._cookies = val
-
-    #endregion
     
     def set_cookie(self, cookie: Dict[str, Any]) -> None:
-        self._cookies.append(cookie)
+        self.cookies.append(cookie)
     
 
     

@@ -1,9 +1,14 @@
 from api import *
 from database import *
 from authorizations import LoginAuthorization
+from api.cors import Cors
 
 login_auth = Authorization(true_case = LoginAuthorization.true_case)
-app = App()
+
+cors = Cors(trusted_urls = "http://localhost:3000")
+
+app = App(port = 8003,cors=cors)
+
 
 @app.route(path="/login", method = HttpMethod.POST)
 def login(*args):
@@ -15,3 +20,6 @@ def login(*args):
     
     return response
 
+
+if __name__ == "__main__":
+    app.run()

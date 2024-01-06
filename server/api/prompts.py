@@ -1,8 +1,9 @@
 import datetime
 from enum import Enum
 from colorama import Fore, Style, init
-from.response_scheme import ResponseScheme
 from .enums import HttpMethod, Statuses
+
+
 """
 prompts to the user
 
@@ -16,6 +17,11 @@ init(autoreset=True)
 class WarningTypes(Enum):
     RUNTIME = "Run Time"
     TYPE = "Type"
+
+class ExceptionTypes(Enum):
+    TYPE = "Type"
+    RUNTIME = "Run Time"
+
 
 class PromptDate:
     def __init__(self) -> None:
@@ -34,7 +40,7 @@ class Prompt:
         return f"{color}{prompt_text}{Style.RESET_ALL}"
     
     def __str__(self) -> str:
-        if isinstance(self, WarningPrompt):
+        if isinstance(self, (WarningPrompt, ExceptionPrompt)):
             return self.content
         if isinstance(self, ResponsePrompt):
             content = self.colored_prompt(prompt_text=self.content, color = Fore.CYAN) if self.status == Statuses.OK else  self.colored_prompt(prompt_text=self.content, color = Fore.RED) 
@@ -61,4 +67,13 @@ class ResponsePrompt(Prompt):
     
     def __str__(self) -> str:
         return f"{self.ip} - - {super().__str__()} {self.status.value} -"
+
+
+class ExceptionPrompt(Prompt):
+    def __init__(self, exception_message: str, type: ExceptionTypes) -> None:
+        content = self.colored_prompt(f"{type.value} Exception: ", Fore.RED) + exception_message 
+        self.type = type
+        super().__init__(content)
+
+
          
