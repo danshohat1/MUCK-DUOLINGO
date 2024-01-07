@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import { Button, Container, CssBaseline, TextField, Typography, Grid, Link as MuiLink, Box, Avatar, Paper, Alert} from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import axios from 'axios';
-
+import findHostname from '../../FindIp';
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -20,7 +20,7 @@ function Login() {
       return;
     }
     
-    axios.post("http://localhost:8003/signup" , JSON.stringify({username: username, password: password})).then((data) =>{
+    axios.post(`http://${findHostname()}:8003/signup` , JSON.stringify({username: username, password: password})).then((data) =>{
       if(data.data !== "User created successfully"){
         setError(data.data)
       }

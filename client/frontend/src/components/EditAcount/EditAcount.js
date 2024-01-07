@@ -17,7 +17,7 @@ import { makeStyles } from '@mui/styles';
 import { useNavigate } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
 import axios from 'axios';
-
+import findHostname from '../../FindIp';
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -74,7 +74,7 @@ function EditAccount() {
 
   const deleteAccount = () => {
 
-    axios.delete("http://localhost:8003/update_user?username=" + sessionStorage.getItem("username")).then((data) => {
+    axios.delete(`http://${findHostname()}:8003/update_user?username=` + sessionStorage.getItem("username")).then((data) => {
       if (data.data === "User deleted successfully") {
         sessionStorage.clear();
         navigate("/login");
@@ -136,7 +136,7 @@ function EditAccount() {
       // Password change verification
       if (verificationInput === "SUBMIT") {
         console.log("new password: " + newPassword)
-        axios.put(`http://10.20.72.130:8003/update_user?oldUsername=${sessionStorage.getItem("username")}&username=${sessionStorage.getItem("username")}&newPassword=${newPassword}`).then((data)=>{
+        axios.put(`http://${findHostname()}:8003/update_user?oldUsername=${sessionStorage.getItem("username")}&username=${sessionStorage.getItem("username")}&newPassword=${newPassword}`).then((data)=>{
           setVerificationOpen(false);
 
           navigate("/main")
@@ -148,9 +148,7 @@ function EditAccount() {
       }
     } else if (currentTab === 1) {
       if (verificationInput === "SUBMIT") {
-        console.log("here!!@@")
-        await axios.put(`http://10.20.72.130:8003/update_user?oldUsername=${sessionStorage.getItem("username")}&username=${newUsername}`).then((data)=>{
-          console.log("here1!!!!")
+        await axios.put(`http://${findHostname()}:8003/update_user?oldUsername=${sessionStorage.getItem("username")}&username=${newUsername}`).then((data)=>{
           setVerificationOpen(false);
           sessionStorage.setItem("username", newUsername);
 

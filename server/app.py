@@ -30,19 +30,24 @@ class MuckApp:
     @app.route(path = "/update_user", method= HttpMethod.PUT)
     def update_user_put(*args):
         """Handle the update user PUT request to modify user information."""
-
+        response = ResponseScheme()
         if len(args) == 3:
             Database.update_user(args[0], args[1], args[2])
         else:
             Database.update_user(args[0], args[1], True)
 
-        return "User updated successfully", Statuses.OK.value
+        response.data ="User updated successfully"
+        return response
 
     @staticmethod
     @app.route(path="/password", method = HttpMethod.GET)
     def password_get(*args):
         """Handle the password GET request to check user password"""
-        return Database.get_password(args[0]), Statuses.OK.value
+        response = ResponseScheme()
+        
+        response.data = Database.get_password(args[0])
+
+        return response
     
     @staticmethod
     @app.route(path= "/update_user", method = HttpMethod.DELETE)
@@ -76,14 +81,21 @@ class MuckApp:
     @app.route(path = "/home_screen", method = HttpMethod.GET)
     def home_screen_get(*args):
         """Handle the home screen GET request to retrieve user language progress."""
-        return Database.home_screen_info(args[0]), Statuses.OK.value
+
+        response = ResponseScheme()
+
+        response.data = Database.home_screen_info(args[0])
+        return response
     
     @staticmethod
     @app.route(path = "all_stages_by_language", method= HttpMethod.GET)
     def all_stages_by_language_get(*args):
         """Handle the all stages by language GET request to retrieve all stages for a user in a specific language."""
         
-        return Database.all_stages(args[0], args[1]), Statuses.OK.value
+        response = ResponseScheme()
+        response.data = Database.all_stages(args[0], args[1])
+
+        return response
 
     @staticmethod
     @app.route(path = "/join_chat", method= HttpMethod.GET)
@@ -104,21 +116,31 @@ class MuckApp:
     @app.route(path = "/new_words", method = HttpMethod.GET)
     def new_word(*args):
         # 0: lang , 1: level
+        response = ResponseScheme()
+        response.data =  Lesson(lang = args[0], level = args[1]).new_words
 
-        return Lesson(lang = args[0], level = args[1]).new_words, Statuses.OK.value
+        return response
     
 
     @staticmethod
     @app.route(path="/warm-up", method = HttpMethod.GET)
     def warm_up(*args):
          # 0: lang , 1: level
-        return Lesson(lang = args[0], level = args[1]).warm_up(), Statuses.OK.value
+        
+        response = ResponseScheme()
+        response.data =  Lesson(lang = args[0], level = args[1]).warm_up()
+
+        return response
 
     @staticmethod
     @app.route(path="/advanced", method = HttpMethod.GET)
     def warm_up(*args):
          # 0: lang , 1: level
-        return Lesson(lang = args[0], level = args[1]).advanced(), Statuses.OK.value
+        
+        response = ResponseScheme()
+        response.data = Lesson(lang = args[0], level = args[1]).advanced()
+
+        return response
 
 
     @staticmethod
@@ -126,9 +148,12 @@ class MuckApp:
     def add_stage(*args) -> List[Union[str,HttpMethod]]:
         # 0: username, 1: lang, 2: level, 3: points 
         Database.add_stage_data(args[0], args[1], args[2], args[3])
-        return "Stage added successfully", Statuses.OK.value
+
+        response = ResponseScheme()
+
+        response.data = "Stage added successfully"
+
+        return response
 
 if __name__ == "__main__":
     main()
-
-

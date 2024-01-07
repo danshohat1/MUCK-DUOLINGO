@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Navigate, useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, Typography, Button } from '@mui/material';
 import axios from 'axios';
-
+import findHostname from '../../FindIp';
 const NewWordsComponent = () => {
   const [wordsData, setWordsData] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -13,7 +13,7 @@ const NewWordsComponent = () => {
 
 
   useEffect(() => {
-    axios.get(`http://10.20.72.130:8003/new_words?lang=${lang}&level=${level}`).then((res) => {
+    axios.get(`http://${findHostname()}:8003/new_words?lang=${lang}&level=${level}`).then((res) => {
       console.log(res.data);
       setWordsData(res.data);
       setIsLoading(false);

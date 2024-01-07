@@ -24,7 +24,6 @@ class Response(Request, Send):
         super().__init__(client_socket)
         if not self.details:
             return
-        
         self.handle_http_request()
 
 
@@ -74,6 +73,7 @@ class Response(Request, Send):
         try: 
             route = self.app.routes.get(route)
             response = route(*(list(self.details["cookies"].values()) +self.details["query_params"] + [value for key, value in self.details["data"].items() if key.lower() != AUTHORIZATION_REQUEST_PARAM]))
+            print("here")
             self.send_prompt(response)
         except: 
             warnings.warn(f"{route.__name__} should return a ResponseScheme type", RuntimeWarning)

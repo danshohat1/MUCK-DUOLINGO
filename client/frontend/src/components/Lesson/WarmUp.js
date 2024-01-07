@@ -11,6 +11,7 @@ import JSConfetti from 'js-confetti';
 import { ClimbingBoxLoader } from 'react-spinners';
 import { css } from '@emotion/react';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
+import findHostname from '../../FindIp';
 
 const override = css`
   display: block;
@@ -39,7 +40,7 @@ const WarmUpComponent = () => {
     }
 
     try {
-      const response = await axios.get(`http://10.0.0.28:8003/warm-up?lang=${lang}&level=${level}`);
+      const response = await axios.get(`http://${findHostname()}:8003/warm-up?lang=${lang}&level=${level}`);
       console.log(response.data)
       setWordsForWarmup(response.data);
       setLoading(false);
