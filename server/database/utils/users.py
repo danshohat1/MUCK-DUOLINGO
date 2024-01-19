@@ -1,5 +1,5 @@
 from ..main import Database  # Assuming there's a typo in 'Datbase' and should be 'Database'
-import hashlib
+from ..hash import Hash
 import re
 from typing import Union, Dict
 
@@ -34,7 +34,7 @@ class Users:
         - bool: True if the password is correct, False otherwise.
         """
         stored_password = Users.database.get_password_by_username(username)[0]
-        return hashlib.sha256(password.encode("UTF-8")).hexdigest() == stored_password
+        return Hash.hashed_password(password) == stored_password
 
     @staticmethod
     def get_password(username: str) -> str:
@@ -81,7 +81,7 @@ class Users:
         if Users.check_username_exists(username):
             return "User already exists" 
         
-        Users.database.create_user(username, hashlib.sha256(password.encode("UTF-8")).hexdigest())
+        Users.database.create_user(username, Hash.hashed_password(password))
 
         return "User created successfully"
     
@@ -96,7 +96,9 @@ class Users:
         Returns:
         - Dict: Home screen information.
         """
+
         return Users.database.handle_home_screen(username)
+
     
     @staticmethod
     def all_stages(username: str, lang: str) -> Dict:
@@ -132,15 +134,14 @@ class Users:
         - new_username (str): The new username.
         - new_password (Union[str, bool]): The new password or a flag indicating to keep the existing password.
         """
-        # Helper function to check if a password is in SHA-256 format
-        is_sha256 = lambda password: bool(re.compile(r'^[a-fA-F0-9]{64}$').match(password))
         
         # If no new password is provided or the provided password is not in SHA-256 format,
         # use the existing password hash for the user.
         if isinstance(new_password, bool):
             new_password = Users.get_password(old_username)
-        elif not is_sha256(new_password):
-            new_password = hashlib.sha256(new_password.encode("UTF-8")).hexdigest()
+            
+        elif not Hash.is_hashed(new_password):
+            new_password = Hash.hashed_password(new_password)
 
         # Update user information in the database
         Users.database.update_user(old_username, new_username, new_password)

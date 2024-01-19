@@ -7,11 +7,23 @@ from .enums import HttpMethod
 from typing import Optional
 from .authorization import Authorization
 from .cors import Cors
+from .prompts import Prompt
 
 DEFAULTPORT = 8000
+WELCOMEMESSAGE = """
+Welcome to Your HTTP Server!
+
+Your server is up and running.
+
+You can access it by sending http requests to http://localhost:{port}/
+
+Happy coding!
+"""
+
 class App(Server):
     def __init__(self, port: int = DEFAULTPORT, authorization: Authorization = None, cors: Cors = Cors()):
         super().__init__(port)
+        self.port=  port
         self.routes = {}
         self.authorization = authorization
         self.cors = cors
@@ -19,6 +31,7 @@ class App(Server):
     def run(self) -> None:
         # run the http server
         super().run()
+        print(Prompt(WELCOMEMESSAGE.format(port=self.port), include_date = False))
 
     def route(self, method: HttpMethod = HttpMethod.GET, path: str = "/", authorization: Optional[Authorization] = None):
         if not authorization:

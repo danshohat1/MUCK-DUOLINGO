@@ -31,16 +31,18 @@ class PromptDate:
         return f"[{self.current_time}]"
 
 class Prompt:
-    def __init__(self, content:str) -> None:
-         self.content = content
-         self.date = PromptDate()
+    def __init__(self, content:str, include_date: bool = True) -> None:
+        self.content = content
+        self.inclue_date = include_date
+
+        self.date = PromptDate()
     
     @staticmethod
     def colored_prompt(prompt_text: str, color: Fore) -> str:
         return f"{color}{prompt_text}{Style.RESET_ALL}"
     
     def __str__(self) -> str:
-        if isinstance(self, (WarningPrompt, ExceptionPrompt)):
+        if isinstance(self, (WarningPrompt, ExceptionPrompt)) or not self.inclue_date:
             return self.content
         if isinstance(self, ResponsePrompt):
             content = self.colored_prompt(prompt_text=self.content, color = Fore.CYAN) if self.status == Statuses.OK else  self.colored_prompt(prompt_text=self.content, color = Fore.RED) 

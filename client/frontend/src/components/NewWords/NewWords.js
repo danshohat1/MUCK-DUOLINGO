@@ -13,7 +13,7 @@ const NewWordsComponent = () => {
 
 
   useEffect(() => {
-    axios.get(`http://${findHostname()}:8003/new_words?lang=${lang}&level=${level}`).then((res) => {
+    axios.get(`http://${findHostname()}:8003/new_words?lang=${lang.toUpperCase()}&level=${level}`).then((res) => {
       console.log(res.data);
       setWordsData(res.data);
       setIsLoading(false);

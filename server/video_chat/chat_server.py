@@ -24,7 +24,7 @@ class ChatServer:
 
         # Find an open port and start the server on that port
         self.port = Port(START_PORT).port
-        print("in server")
+        
         print(f"Chat server is running at port {self.port}, updating chats")
 
         # Create a thread to run the socket.io server

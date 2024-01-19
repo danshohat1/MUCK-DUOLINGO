@@ -31,7 +31,7 @@ function Navigation() {
 
 
   return (
-    <AppBar position="static">
+    <AppBar id = "navbar" position="static">
       <Toolbar>
         <Typography variant="h6" component={Link} to="/" style={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}>
           <TranslateIcon /> Muck

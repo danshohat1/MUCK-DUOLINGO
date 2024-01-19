@@ -21,8 +21,7 @@ class Server:
         server_socket.bind((IP, port))
         # Set the server to listen for incoming connections with a maximum backlog of 10
         server_socket.listen(10)
-        # Print a message indicating that the server is running
-        print(f"The server is running at port: {port}")
+        
         # Return the configured server socket
         return server_socket
 

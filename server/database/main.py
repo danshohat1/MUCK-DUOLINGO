@@ -9,8 +9,8 @@ class Database:
 
     def handle_home_screen(self, username):
         """Retrieve language progress information for a user"""
+        print("heree")
         user_id = self.get_user_id_by_username(username)
-
         # Fetch distinct language codes associated with the user
         self.cur.execute(f"SELECT DISTINCT language_code FROM LanguageProgress WHERE user_id = {user_id};")
         languages = self.cur.fetchall()
@@ -23,7 +23,6 @@ class Database:
             last_stage = self.cur.execute(
                 f"SELECT stage, stage_points FROM LanguageProgress WHERE user_id = {user_id} AND language_code = '{language}' ORDER BY stage DESC LIMIT 1;").fetchone()
             language_and_stage[language] = last_stage
-
         return language_and_stage
 
     def get_all_usernames(self):

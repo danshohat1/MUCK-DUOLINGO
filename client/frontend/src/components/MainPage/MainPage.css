@@ -1,0 +1,51 @@
+/* Add this CSS to your stylesheet */
+
+.box {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+  }
+  
+  .language-name {
+    font-size: smaller;
+    font-weight: normal;
+    margin-top: 13px; /* Adjust as needed */
+  }
+  
+  
+  @keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+  }
+  
+  @keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: black }
+  }
+
+  .typewriter {
+    white-space: pre-wrap;
+    margin: 0;
+    padding: 0 1em;
+    position: relative;
+  }
+  
+  .typewriter:after {
+    content: '|';
+    position: absolute;
+    right: -0.2em;
+    animation: blink 1s infinite;
+  }
+  
+  .blinking-cursor {
+    animation: blink 1s infinite;
+  }
+  
+  @keyframes blink {
+    50% { opacity: 0; }
+  }
+  
+  
+  
