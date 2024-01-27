@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Box, Container, Grid, TextField, Typography, List, ListItem, ListItemAvatar, Avatar, ListItemText, Paper } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import "country-flag-icons/3x2/flags.css";
 import countries from './countries';
@@ -9,7 +9,7 @@ import { ClimbingBoxLoader } from 'react-spinners';
 import {css} from '@emotion/react';
 import { ArrowForwardIos } from '@mui/icons-material';
 import languages  from '../../objects';
-
+import findHostname from '../../FindIp';
 const override = css`
   display: block;
   margin: 0 auto;
@@ -28,16 +28,17 @@ function reverseObject(obj) {
 
 const Typewriter = ({ text, language }) => {
   const [displayedText, setDisplayedText] = useState('');
-  const [isCompleted, setIsCompleted] = useState(false); // New state to track completion
+  const [isCompleted, setIsCompleted] = useState(false); 
+
   let currentCharIndex = 0;
   let currentWordIndex = 0;
   const words = text ? text.split(' ') : [];
 
   useEffect(() => {
-    if (isCompleted) return; // Do not start the timer if typing is completed
+    if (isCompleted) return; 
 
     const timer = setInterval(() => {
-      if (!words.length) return; // Do nothing if words array is empty
+      if (!words.length) return; 
 
       if (currentWordIndex < words.length) {
         const currentWord = words[currentWordIndex];
@@ -50,16 +51,16 @@ const Typewriter = ({ text, language }) => {
           currentWordIndex++;
         }
       } else {
-        setIsCompleted(true); // Set completion state to true
+        setIsCompleted(true);
         clearInterval(timer);
       }
     }, 100);
 
     return () => clearInterval(timer);
-  }, [isCompleted, words.length]); // Add `isCompleted` and `words.length` as dependencies
+  }, [isCompleted, words.length]);
   const getFlagIcon = (language) => {
     const countryCode = countries[language];
-    return <span className={"flag:" + countryCode} /> // Using the country-flags-icons package
+    return <span className={"flag:" + countryCode} /> 
   };
   return (
     <div>
@@ -82,9 +83,17 @@ const MainPage = () => {
   const [languageList, setLanguageList] = useState([]);
   const [helloMsg, setHelloMsg] = useState({});
   const [stagesInfo, setStagesInfo] = useState({});
+  const navigate = useNavigate();
+
   useEffect(async () => {
+    if (sessionStorage.getItem("loggedIn") !== "true"){
+      return (
+        navigate("/login")
+      )
+    }
+    
     setIsLoading(true);
-    const response = await axios.post(`http://localhost:8003/home-info`, JSON.stringify({
+    const response = await axios.post(`http://${findHostname()}:8003/home-info`, JSON.stringify({
       username: sessionStorage.getItem("username")
     }));
 
@@ -127,10 +136,10 @@ const MainPage = () => {
 
     setIsLoading(false)
   }, [])
-  // Function to get the flag icon for a given language
+  
   const getFlagIcon = (language) => {
     const countryCode = languageToCountryCode[language];
-    return <span className={"flag:" + countryCode} /> // Using the country-flags-icons package
+    return <span className={"flag:" + countryCode} /> 
   };
 
   const handleSearchChange = (event) => {
@@ -156,7 +165,7 @@ const MainPage = () => {
     return filteredLanguages.length ? (
       <List>
         {filteredLanguages.map((language, index) => (
-          // Ensure the key is unique. If `language` is a string, this is sufficient.
+          
           <ListItem key={`${language}-${index}`} component={Link} to={`/learn/${languages[language.toLowerCase()]}`}>
             <ListItemAvatar>
               {getFlagIcon(language)}
@@ -197,7 +206,7 @@ const MainPage = () => {
               '&:hover': {
                 backgroundColor: 'rgba(0, 0, 0, 0.1)', // Darker background on hover
                 '.MuiListItemText-root': {
-                  // Optional: Add styles for text or other elements on hover
+                 
                 },
                 '.arrow-icon': {
                   visibility: 'visible', // Make the arrow visible on hover
@@ -212,7 +221,6 @@ const MainPage = () => {
       </List>
     );
   };
-
 
   return (
     <Container>
@@ -237,7 +245,7 @@ const MainPage = () => {
 
       {/* Search Section (Right) */}
       <Grid item xs={12} md={4}>
-        <Paper elevation={3} sx={{ padding: 2, backgroundColor: '#f0f0f0', minHeight: 300 }}>
+        <Paper elevation={3} sx={{ padding: 2, backgroundColor: '#f0f0f0', minHeight: 300,width: '100%', boxSizing: 'border-box' }}>
           <Typography variant="h6">Search for a Language</Typography>
           <Box sx={{ mt: 2 }}>
             <TextField

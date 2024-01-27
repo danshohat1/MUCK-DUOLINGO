@@ -44,14 +44,14 @@ class Lesson:
         """
         # Convert the language string to the corresponding Languages enum
         self.lang = Languages[self.lang]
-
+        print(self.lang)
         # Set up attributes using lesson data
         self.level_data = LESSONS[str(self.level)]
         self.translate = Trans(self.lang.name.lower())
 
         # Generate new words for the lesson
         self.new_words = [self.translate(word) for word in self.level_data["newWords"]] 
-
+        print(self.new_words)
         # Generate questions for the lesson
         self.__questions = [self.translate(question) for question in self.level_data["questions"]]
 

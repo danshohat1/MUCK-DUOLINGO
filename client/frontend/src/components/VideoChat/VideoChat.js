@@ -200,7 +200,7 @@ const VideoCallComponent = () => {
           delete userVideoElements[idFormat.find((val) => val[1] === user_sid)[0]];
         }
         idFormat = idFormat.filter((val) => val[1] !== user_sid);
-        setParticipants(prev => Math.max(prev - 1, 1)); // Ensure there is at least one participant
+        setParticipants(prev => Math.max(prev - 1, 1));
         updateLayout()
 
       });
@@ -236,14 +236,14 @@ const getGridStyle = (participants) => {
     case 4:
       return { gridTemplateColumns: '1fr 1fr', gridTemplateRows: '1fr 1fr' };
     default:
-      return { gridTemplateColumns: '1fr', gridTemplateRows: '1fr' }; // Default to a single cell grid
+      return { gridTemplateColumns: '1fr', gridTemplateRows: '1fr' }; 
   }
 };
 const updateLayout = () => {
   const numRemoteParticipants = Object.keys(userVideoElements).length;
-  const totalParticipants = numRemoteParticipants + 1; // Including local user
+  const totalParticipants = numRemoteParticipants + 1; 
   const videoChatContainer = document.getElementById('video-chat');
-  const paperElement = videoChatContainer.parentNode; // Assuming videoChat is directly inside Paper
+  const paperElement = videoChatContainer.parentNode;
 
   let numRows, numColumns;
 
@@ -255,7 +255,7 @@ const updateLayout = () => {
     numColumns = Math.ceil(totalParticipants / 2);
   }
 
-  const paddingBottom = 50; // Padding bottom value in pixels
+  const paddingBottom = 50;
   const videoWidth = paperElement.clientWidth / numColumns;
   const videoHeight = (paperElement.clientHeight - paddingBottom) / numRows;
 

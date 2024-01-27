@@ -11,8 +11,13 @@ const NewWordsComponent = () => {
   const {lang, level} = useParams();
   const navigate = useNavigate();
 
-
   useEffect(() => {
+    if (sessionStorage.getItem("loggedIn") !== "true"){
+      return (
+        navigate("/login")
+      )
+    }
+    
     axios.get(`http://${findHostname()}:8003/new_words?lang=${lang.toUpperCase()}&level=${level}`).then((res) => {
       console.log(res.data);
       setWordsData(res.data);

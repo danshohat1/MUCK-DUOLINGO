@@ -252,7 +252,7 @@ const LanguagePracticeComponent = () => {
       navigate(`/new-words/${lang}/${level}`);
     }
     try {
-      const response = await axios.get(`http://${findHostname()}:8003/advanced?lang=${lang}&level=${level}`);;
+      const response = await axios.get(`http://${findHostname()}:8003/advanced?lang=${lang.toUpperCase()}&level=${level}`);;
       setQuestions(response.data);
       setLoading(false);
     } catch (error) {
@@ -312,7 +312,7 @@ const LanguagePracticeComponent = () => {
     if (points < 33){
         setStars(1);
     }
-    else if (points < 66){
+    else if (points < 80){
         setStars(2);
     }
     else {
@@ -334,12 +334,18 @@ const LanguagePracticeComponent = () => {
 
   const handleNextLesson = async () => {
     console.log(points)
-    const response = await axios.post(`http://${findHostname()}:8003/add_stage `, {username: "user1", lang: lang, level: level, points: points})
+    const response = await axios.post(`http://${findHostname()}:8003/add_stage `, {username: sessionStorage.getItem("username"), lang: lang.toUpperCase(), level: level, points: points})
 
     console.log(response.data)
+    navigate(`/new-words/${lang}/${level+1}`);
   }
 
-  const handleBackToMain = () => {
+  const handleBackToMain = async () => {
+    axios.post(`http://${findHostname()}:8003/add_stage `, {username: sessionStorage.getItem("username"), lang: lang.toUpperCase(), level: level, points: points}).then(res => {
+      console.log(res.data)
+      return (navigate("/main"));
+    })
+
   }
 
   const handleBackToWarmup = () => {

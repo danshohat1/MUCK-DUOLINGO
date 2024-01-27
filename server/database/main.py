@@ -68,7 +68,7 @@ class Database:
         stages_dic = {}
 
         for stage in stages:
-            stages_dic[stage[0]] = stage[1]
+            stages_dic[stage[0]] = {"grade": stage[1]}
 
         return stages_dic
 

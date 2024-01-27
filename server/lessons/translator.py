@@ -37,6 +37,7 @@ class Trans:
         """
         try:
             if isinstance(to_translate, str):
+                print(to_translate)
                 # Translate placeholders in the string
                 for res in re.findall(self.pattern, to_translate):
                     if res == "LANG":

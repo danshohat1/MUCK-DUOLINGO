@@ -1,12 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Box, Container, Typography, IconButton, Paper, Backdrop, Button } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import LockIcon from '@mui/icons-material/Lock';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
 import CloseIcon from '@mui/icons-material/Close';
 import languages from '../../objects';
+import axios from 'axios';
+import findHostname from '../../FindIp';
+import { ClimbingBoxLoader } from 'react-spinners';
+import {css} from '@emotion/react';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack'; 
 
+
+
+const override = css`
+  display: block;
+  margin: 0 auto;
+  border-color: red;
+`;
 
 function reverseObject(obj) {
   const reversed = {};
@@ -24,23 +36,37 @@ const LearnLanguage = () => {
   const [language, setLanguage] = useState(lang);
   const [selectedStage, setSelectedStage] = useState(null);
   const [showPopup, setShowPopup] = useState(false);
+  const [stagesInfo, setStagesInfo] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
+  const navigate = useNavigate();
+
+
+
+  useEffect(async () => {
+    setIsLoading(true);
+    if (sessionStorage.getItem("loggedIn") !== "true"){
+      return (
+        navigate("/login")
+      )
+    }
+
+
+    const response = await axios.post(`http://${findHostname()}:8003/get-stages`, {username: sessionStorage.getItem('username'), language: lang.toUpperCase()});
+    const data = response.data;
+    console.log(data)
+    setStagesInfo(data);
     try{
       const reversedLanguages = reverseObject(languages);
       const full_lang = reversedLanguages[lang][0].toUpperCase() + reversedLanguages[lang].slice(1);
 
       setLanguage(full_lang);
+      setIsLoading(false)
     } catch(err) {
-      // navigate..
+      return navigate("/main")
     }
   },[])
-  const stagesInfo = {
-    completed: { 1: { stars: 3, grade: 85 }, 2: { stars: 2, grade: 70 }, 3: { stars: 1, grade: 60 } },
-    current: 4,
-    total: 10
-  };
-
+  
   const handleStageClick = (stageNumber) => {
     setSelectedStage(stageNumber);
     setShowPopup(true);
@@ -66,7 +92,9 @@ const LearnLanguage = () => {
       </Paper>
     );
   };
-
+  const startStage = () => {
+    navigate(`/new-words/${lang}/${selectedStage}`);
+  }
   const PopupContent = () => {
     if (!selectedStage) return null;
   
@@ -85,7 +113,7 @@ const LearnLanguage = () => {
           {Array.from({ length: 3 }, (_, i) => renderStar(i < stageDetails.stars, `detail-star-${selectedStage}-${i}`))}
         </Box>
         {isCompleted && <Typography sx={{ my: 2 }}>{`Grade: ${stageDetails.grade}%`}</Typography>}
-        <Button variant="contained" color="primary" sx={{ mt: 2, width: '100%' }}>
+        <Button onClick = {startStage} variant="contained" color="primary" sx={{ mt: 2, width: '100%' }}>
           {isCompleted ? 'Do Again' : 'Start Stage'}
         </Button>
       </Box>
@@ -112,6 +140,24 @@ const LearnLanguage = () => {
       handleClosePopup();
     }
   };
+  const handleBack = () => {
+    navigate("/main");
+  };
+
+
+
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <ClimbingBoxLoader color="#353BFF" loading={isLoading} css={override} size={40} />
+        <div style={{ marginTop: 16, fontWeight: 'bold' }}>Hold on...
+        </div>
+        <div style={{ marginTop: 16, fontWeight: 'bold' }}>
+        taking longer than ususal? try refreshing the page
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Container>
@@ -124,8 +170,11 @@ const LearnLanguage = () => {
       justifyContent: 'space-between'
     }}>
       <Box sx={{ textAlign: 'center', position: 'relative' }}>
+      <IconButton onClick={handleBack} sx={{ position: 'absolute', top: 0, left: 0 }}>
+            <ArrowBackIcon /> 
+          </IconButton>
         <Typography variant="h4" gutterBottom>{`Learn ${language}`}</Typography>
-        <IconButton onClick={() => alert('Join video chat')} sx={{ position: 'absolute', top: 0, right: 0, color: 'blue', fontSize: '2rem' }}>
+        <IconButton onClick={() => navigate(`/video-chat/${lang}`)} sx={{ position: 'absolute', top: 0, right: 0, color: 'blue', fontSize: '2rem' }}>
           <VideoCallIcon fontSize="large" /> {/* Increased size of the icon */}
         </IconButton>
       </Box>

@@ -34,12 +34,16 @@ class Response(Request, Send):
             self.handle_cors(response)
             self.send(client_socket = self.client_socket, msg = response.data, status = response.status.value, cookies = response.cookies, cors = self.cors)
             return
-
+        print(self.details["path"])
         route : List[Route] = list(filter(lambda route: route.path == self.details["path"] and route.method == self.details["method"], self.app.routes.keys()))
 
         if route  == []:
-            self.send("not found.", Statuses.NOT_FOUND.value)
+            response = ResponseScheme()
+            response.status = Statuses.NOT_FOUND
+
+            self.send_prompt(response)
             return 
+        
         route = route[0]
         if route.authorization:
             key = [val for key, val in self.details["data"].items() if key.lower() == AUTHORIZATION_REQUEST_PARAM]
@@ -73,7 +77,8 @@ class Response(Request, Send):
             route = self.app.routes.get(route)
             response = route(*(list(self.details["cookies"].values()) +self.details["query_params"] + [value for key, value in self.details["data"].items() if key.lower() != AUTHORIZATION_REQUEST_PARAM]))
             self.send_prompt(response)
-        except: 
+        except Exception as e:
+            print(e) 
             warnings.warn(f"{route.__name__} should return a ResponseScheme type", RuntimeWarning)
 
             response = ResponseScheme()

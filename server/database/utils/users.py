@@ -112,8 +112,27 @@ class Users:
         Returns:
         - Dict: Information about all stages.
         """
-        return Users.database.get_all_stages(username, lang)
-    
+        print(username, lang)
+
+        stages = {}
+        stages["completed"] = Users.database.get_all_stages(username, lang)
+
+
+        for _, stage in stages["completed"].items():
+            if stage["grade"] < 33:
+                stage["stars"] = 1
+            if stage["grade"] < 80:
+                stage["stars"] = 2
+            else:
+                stage["stars"] = 3
+        if stages["completed"]:
+            stages["current"] = list(stages["completed"].items())[-1][0] + 1
+        else:
+            stages["current"] = 1
+        stages["total"] = 5
+        
+        return stages
+
     @staticmethod
     def delete_user(username: str) -> None:
         """

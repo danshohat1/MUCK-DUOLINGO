@@ -23,7 +23,6 @@ class Request:
         if not cookies:
             cookies = [None]
         
-
         return self.generate_friendly_details(ret[0].split() + [ret[-1]] + cookies)
         
 
@@ -52,7 +51,7 @@ class Request:
                             "=" in param]
         return query_params
     
-    def parse_cookies(header):
+    def parse_cookies(self, header):
         cookies = {}
     
         cookie_string = header[len('Cookie: '):]

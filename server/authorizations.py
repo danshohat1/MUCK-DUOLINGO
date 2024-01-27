@@ -1,9 +1,10 @@
 from database import Database
 from api import *
+from typing import Dict
 
 class LoginAuthorization:
     @staticmethod
-    def true_case(data: dict): 
+    def true_case(data: Dict): 
        response = ResponseScheme()
     
        username = data.get("username")

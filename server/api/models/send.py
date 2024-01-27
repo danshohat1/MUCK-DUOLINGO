@@ -13,7 +13,7 @@ class Send:
             
             response += func(**kwargs)
 
-            kwargs["client_socket"].send(response.encode())
+            kwargs["client_socket"].sendall(response.encode())
 
             return response
         return wrapper
@@ -27,8 +27,7 @@ class Send:
         # Check if cookies are provided in the response
         cookies = kwargs.get("cookies", [])
 
-        # If cookies are provided, set them in the response headers
-
+        print(result)
         # Include the result in the JSON response
         if cookies:
             response_body = {
@@ -38,10 +37,18 @@ class Send:
         else:
             response_body = result 
         json_response = json.dumps(response_body)
-        response = f"Content-Length: {len(json_response)}\r\n"
-        response += "Content-Type: application/json\r\n"
-        response += "\r\n"
-        response += json_response
+        
+
+        if isinstance(response_body, str):
+            response = "Content-Type: text/html\r\n"
+            response += f"Content-Length: {len(response_body)}\r\n\r\n"
+            response += response_body
+            return response
+        
+        response = "Content-Type: application/json\r\n"
+        response += f"Content-Length: {len(json_response)}\r\n\r\n"  
+        response += json.dumps(response_body)
+
         return response
 
     @staticmethod

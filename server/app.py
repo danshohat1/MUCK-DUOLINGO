@@ -154,8 +154,12 @@ def home_screen_info(username):
     response_scheme.data = {"languages": dict([(lang_obj.value, lang_code) for lang_code, lang_obj in Languages.__members__.items()]), "stages_info": last_stages}
     return response_scheme
 
+@app.route(path = "/get-stages", method = HttpMethod.POST)
+def get_stages(*args):
+    response_scheme = ResponseScheme()
+    response_scheme.data = Database.all_stages(args[0], args[1])
+    return response_scheme
 
-    
 
 if __name__ == "__main__":
     main()
