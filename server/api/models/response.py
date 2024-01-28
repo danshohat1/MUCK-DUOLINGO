@@ -75,7 +75,7 @@ class Response(Request, Send):
     def call_route(self, route):
         try: 
             route = self.app.routes.get(route)
-            response = route(*(list(self.details["cookies"].values()) +self.details["query_params"] + [value for key, value in self.details["data"].items() if key.lower() != AUTHORIZATION_REQUEST_PARAM]))
+            response = route(*(self.details["query_params"] + [value for key, value in self.details["data"].items() if key.lower() != AUTHORIZATION_REQUEST_PARAM]))
             self.send_prompt(response)
         except Exception as e:
             print(e) 
