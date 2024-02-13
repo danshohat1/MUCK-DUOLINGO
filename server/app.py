@@ -1,6 +1,6 @@
 from database import *
 from video_chat import *
-from api import *
+from easy_http import *
 from lessons import *
 from authorizations import LoginAuthorization
 
@@ -160,6 +160,26 @@ def get_stages(*args):
     response_scheme.data = Database.all_stages(args[0], args[1])
     return response_scheme
 
+@app.route(path = "/leaderboard", method = HttpMethod.GET)
+def leaderboard():
+
+    response_scheme = ResponseScheme()
+    languageFormat = {
+        "EN": "GB",
+        "HE": "IL",
+        "sp": "ES"
+    }
+
+
+    leaders = Database.get_leaders("*")
+
+    for i, leader in enumerate(leaders):
+        leaders[i]["language"] = Languages[leader["languageCode"]].value
+
+        leaders[i]["languageCode"] = languageFormat.get(leader["languageCode"], leader["languageCode"])
+    
+    response_scheme.data = leaders
+    return response_scheme
 
 if __name__ == "__main__":
     main()

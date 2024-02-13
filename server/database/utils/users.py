@@ -1,7 +1,7 @@
 from ..main import Database  # Assuming there's a typo in 'Datbase' and should be 'Database'
 from ..hash import Hash
 import re
-from typing import Union, Dict
+from typing import Union, Dict, List
 
 class Users:
 
@@ -67,6 +67,18 @@ class Users:
         return "Logged in successfully" if Users.check_password(username, password) else "Your password is invalid. Please try again."
 
     @staticmethod
+    def learned_languages(username: str) -> List[str]:
+        """ returns all the langugaes that the user is learning"""
+
+        return Users.database.get_all_languages(username)
+    
+    @staticmethod
+    def get_leaders(lang: str = "*") -> List[str]:
+        leaders = Users.database.get_leaders(lang)
+        
+        return list(map(lambda leader: {"username": leader[0], "stage": leader[1], "languageCode": leader[2]}, leaders))
+
+    @staticmethod
     def signup(username: str, password: str) -> str:
         """
         Create a new user in the system.
@@ -99,7 +111,7 @@ class Users:
 
         return Users.database.handle_home_screen(username)
 
-    
+
     @staticmethod
     def all_stages(username: str, lang: str) -> Dict:
         """

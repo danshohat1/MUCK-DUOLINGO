@@ -67,7 +67,6 @@ const countries = {
     Kirghiz: 'KG', // Kyrgyzstan for Kirghiz
     Komi: 'RU', // Russia for Komi
     Kongo: 'CG', // Republic of the Congo for Kongo
-    Korean: 'KR', // South Korea for Korean
     Kuanyama: 'AO', // Angola for Kuanyama
     Kurdish: 'TR', // Turkey for Kurdish
     Lao: 'LA', // Laos for Lao
@@ -126,7 +125,6 @@ const countries = {
     Sindhi: 'PK',
     Somali: 'SO',
     SouthernSotho: 'LS',
-    Spanish: 'ES',
     Albanian: 'AL',
     Sardinian: 'IT',
     Serbian: 'RS',

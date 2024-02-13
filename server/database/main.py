@@ -1,5 +1,5 @@
 import sqlite3
-
+from typing import List
 
 class Database:
     def __init__(self):
@@ -55,7 +55,7 @@ class Database:
 
     def get_user_by_id(self, id):
         """Get the username and password associated with a given user ID."""
-        return self.cur.execute(f"SELECT username, password FROM users WHERE id = {id}")
+        return self.cur.execute(f"SELECT username FROM users WHERE id = {id}").fetchone()
 
     def get_all_stages(self, username, language_code):
         """Get all stages and stage points for a user in a specific language."""
@@ -109,9 +109,35 @@ class Database:
     
 
 
-    def get_all_languages(self, id):
+    def get_all_languages(self, username: str) -> List[str]:
         """Get all distinct languages that a user is learning."""
-        return self.cur.execute(f"SELECT DISTINCT language_code FROM LanguageProgress WHERE user_id = {id};")
+        user_id = self.get_user_id_by_username(username)
+        return self.cur.execute(f"SELECT DISTINCT language_code FROM LanguageProgress WHERE user_id = {user_id};").fetchall()
+    
+    def get_leaders(self, lang_code: str = "*") -> List[str]:
+        """Get all usernames with the highest stage for a given language code."""
+        if lang_code == "*":
+            query = """
+                    SELECT user_id, MAX(stage) as highest_stage, language_code
+                FROM LanguageProgress
+                GROUP BY user_id, language_code
+                ORDER BY highest_stage DESC, language_code, user_id
+                    """
+        else:
+            query = f"""
+                    SELECT user_id, MAX(stage) as highest_stage, language_code
+                FROM LanguageProgress
+                WHERE language_code = '{lang_code}'
+                GROUP BY user_id, language_code
+                ORDER BY highest_stage DESC, language_code, user_id
+                    """
+
+        res = self.cur.execute(query).fetchall()
+        
+        username = lambda id: self.get_user_by_id(id)
+
+        res = [(username(val[0])[0],val[1], val[2]) for val in res if username(val[0])]
+        return res
 
     def close(self):
         """Close the database connection."""

@@ -15,7 +15,7 @@ import  WarmUp from './components/Lesson/WarmUp.js';
 import LanguagePracticeComponent from './components/Lesson/LanguagePracticeComponnent.js';
 import FillSentence from './components/Lesson/FillSentence.js';
 import LearnLanguage from './components/Learn/Learn.js';
-
+import LeaderboardPage from './components/MainPage/LeaderboardPage.js';
 function App() {
   return (
     <Router>
@@ -40,7 +40,7 @@ function App() {
             <Route path = "/fill" element = {<FillSentence /> } /> 
             <Route path = "/learn/:lang" element = {<LearnLanguage />} />
             <Route path="*" element={<PageNotFound />} />
-            
+            <Route path = "/leaderboard" element = {<LeaderboardPage />} />
           </Routes>
 
         </AuthProvider>

@@ -1,5 +1,5 @@
 from database import Database
-from api import *
+from easy_http import *
 from typing import Dict
 
 class LoginAuthorization:

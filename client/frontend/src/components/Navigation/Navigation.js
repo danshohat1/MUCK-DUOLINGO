@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import Popover from '@mui/material/Popover';
-import { AccountCircle, PersonAdd } from '@mui/icons-material';
+import { AccountCircle, PersonAdd, BarChart as LeaderboardIcon, Home as HomeIcon } from '@mui/icons-material';
 import TranslateIcon from '@mui/icons-material/Translate';
 import { useAuth } from '../../AuthContext';
 
@@ -36,8 +36,15 @@ function Navigation() {
         <Typography variant="h6" component={Link} to="/" style={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}>
           <TranslateIcon /> Muck
         </Typography>
+        <IconButton color="inherit" component={Link} to="/leaderboard" aria-label="leaderboard">
+          <LeaderboardIcon />
+        </IconButton>
         {isLoggedIn ? (
           <div>
+            <IconButton color="inherit" component={Link} to="/main" aria-label="home">
+              <HomeIcon />
+            </IconButton>
+
             <IconButton
               color="inherit"
               aria-label="account"
