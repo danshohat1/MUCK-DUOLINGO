@@ -1,9 +1,11 @@
 from database import *
 from video_chat import *
 from easy_http import *
+from easy_http.render import Render
 from lessons import *
 from authorizations import LoginAuthorization
-
+import sys
+import os
 
 
 login_auth = Authorization(true_case = LoginAuthorization.true_case)
@@ -13,6 +15,7 @@ def main():
     # initiate the app.
     app.run()
     
+
 @app.route(path = "/signup", method = HttpMethod.POST)
 def signup_post(*args):
     """Handle the signup POST request to create a new user."""
@@ -121,11 +124,18 @@ def warm_up(*args):
     return response
 
 @app.route(path="/advanced", method = HttpMethod.GET)
-def warm_up(*args):
+def advanced(*args):
         # 0: lang , 1: level
     
-    response = ResponseScheme()
-    response.data = Lesson(lang = args[0], level = args[1]).advanced()
+    try:
+        response = ResponseScheme()
+        response.data = Lesson(lang = args[0], level = args[1]).advanced()
+        print("muck muck muck")
+    except Exception as e:
+        exc_type, exc_obj, exc_tb = sys.exc_info()
+        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
+        print(exc_type, fname, exc_tb.tb_lineno)
+        print(e)
 
     return response
 

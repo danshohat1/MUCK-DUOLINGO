@@ -18,8 +18,9 @@ class FillSentenceQuestion:
     
     def generate_blocks(self) -> List[Dict[str,str]]:
         answer_words = self.answer.split()
+        print("muck1")
         answer_words = list(map(lambda term: self.get_block(term.replace("_", " ")), answer_words))
-    
+        print("muck2")
         print(answer_words)
         if len(answer_words) > self.number_of_options:
             raise Exception

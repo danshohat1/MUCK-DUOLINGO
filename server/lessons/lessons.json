@@ -86,6 +86,157 @@
                 "answer": "hello how_are_you_doing"
             }
         ]
+    },
+    "2": {
+        "newWords": [
+            {"leg": "{leg}"},
+            {"food": "{food}"},
+            {"friend": "{friend}"},
+            {"house": "{house}"},
+            {"nose": "{nose}"},
+            {"phone": "{phone}"},
+            {"teeth": "{teeth}"},
+            {"arm": "{arm}"},
+            {"face": "{face}"},
+            {"want": "{want}"}
+        ],
+        "questions": [
+            {"type": "fillin", "sentence": "Do you have a ____?", "answer": "{phone}"},
+            {"type": "multiplechoice", "sentence": "You walk with your ____", "answer": "{leg}"},
+            {"type": "fillin", "sentence": "You eat with you ____", "answer": "{teeth}"},
+            {"type": "multiplechoice", "sentence": "Do you need more food?", "answer": "{no}"},
+            {"type": "fillsentence", "sentence": "{good_morning}, {friend}", "answer": "good_morning friend"},
+            {"type": "fillin", "sentence": "I need to buy a ____.", "answer": "{phone}"},
+            {"type": "multiplechoice", "sentence": "Would you like to go out?", "answer": "{yes}"},
+            {"type": "fillin", "sentence": "My ____ is bleeding!", "answer": "{arm}"},
+            {
+                "type": "fillsentence",
+                "sentence": "{hello}, {how_are_you_doing}",
+                "answer": "hello how_are_you_doing"
+            },
+            {
+                "type": "fillin",
+                "sentence": "Thank you for your ____.",
+                "answer": "{help}"
+            }
+        ]
+    },
+    "3": {
+        "newWords": [
+            {"today": "{today}"},
+            {"tomorrow": "{tomorrow}"},
+            {"yesterday": "{yesterday}"},
+            {"movie": "{movie}"},
+            {"later": "{later}"},
+            {"morning": "{morning}"},
+            {"night": "{night}"},
+            {"goal": "{goal}"},
+            {"drink": "{drink}"},
+            {"eat": "{to_eat}"}
+        ],
+        "questions": [
+            {"type": "fillsentence", "sentence": "{good_morning}, {friend}", "answer": "good_morning friend"},
+            {
+                "type": "fillsentence",
+                "sentence": "{hello}, {how_are_you_doing}",
+                "answer": "hello how_are_you_doing"
+            },
+            {"type": "fillin", "sentence": "I will see you ____.", "answer": "{tomorrow}"},
+            {"type": "multiplechoice", "sentence": "May you {to_eat}", "answer": "{yes}"},
+            {"type": "multiplechoice", "sentence": "Are you thirsty?", "answer": "{yes}"},
+            {"type": "fillsentence", "sentence": "{good_morning}, {how_are_you_doing}", "answer": "good_morning how_are_you_doing"},
+            {
+                "type": "fillsentence",
+                "sentence": "{hello}, {how_are_you_doing}",
+                "answer": "hello how_are_you_doing"
+            },
+            {"type": "multiplechoice", "sentence": "You walk with your ____", "answer": "{leg}"},
+            {
+                "type": "multiplechoice",
+                "sentence": "Is it Christmas now?",
+                "answer": "{no}"
+            },
+            {"type": "fillin", "sentence": "My ____ is bleeding!", "answer": "{arm}"}
+        ]
+    },
+
+        "4": {
+            "newWords": [
+                {"old": "{old}"},
+                {"put": "{to_put}"},
+                {"people": "{people}"},
+                {"first": "{first}"},
+                {"high": "{high}"},
+                {"why": "{why}"},
+                {"eye": "{eye}"},
+                {"how": "{how}"},
+                {"earth": "{earth}"},
+                {"same": "{same}"}
+            ],
+            "questions": [
+                {"type": "fillin", "sentence": "I will see you ____.", "answer": "{tomorrow}"},
+                {"type": "fillin", "sentence": "Can you please {listen} to the music ____?", "answer": "{now}"},
+                {"type": "multiplechoice", "sentence": "Did she tald you to {listen} to the podcast?", "answer": "{no}"},
+                {"type": "multiplechoice", "sentence": "Would you like to {listen} to some music?", "answer": "{yes}"},
+                {"type": "fillsentence", "sentence": "{good_morning}, {how_are_you_doing}", "answer": "good_morning how_are_you_doing"},
+
+                {"type": "multiplechoice", "sentence": "Are you thirsty?", "answer": "{yes}"},
+                {
+                    "type": "fillin",
+                    "sentence": "Let's say ____.",
+                    "answer": "{goodbye}"
+                },
+                {
+                    "type": "multiplechoice",
+                    "sentence": "Is it Christmas now?",
+                    "answer": "{no}"
+                },
+                {"type": "multiplechoice", "sentence": "Do you have the {know} how to swim?", "answer": "{yes}"},
+                {
+                    "type": "fillin",
+                    "sentence": "_____, my name is.",
+                    "answer": "{good_morning}"
+                }
+            ]
+        },
+    
+    
+    "5": {
+        "newWords": [
+            {"school": "{school}"},
+            {"teacher": "{teacher}"},
+            {"student": "{student}"},
+            {"dog": "{dog}"},
+            {"bottle": "{bottle}"},
+            {"homework": "{homework}"},
+            {"meaning": "{meaning}"},
+            {"sit": "{sit}"},
+            {"interesting": "{interesting}"},
+            {"answer": "{answer}"}
+        ],
+        "questions": [
+            {
+                "type": "fillin",
+                "sentence": "Let's say ____.",
+                "answer": "{goodbye}"
+            },
+            {"type": "fillin", "sentence": "The {teacher} asked the ____ for solution.", "answer": "{student}"},
+            {"type": "multiplechoice", "sentence": "Are you a {student}?", "answer": "{yes}"},
+            {"type": "fillin", "sentence": "I did my {homework} ____.", "answer": "{yesterday}"},
+            {
+                "type": "multiplechoice",
+                "sentence": "Can you {help} me?",
+                "answer": "{yes}"
+            },
+            {"type": "multiplechoice", "sentence": "You walk with your ____", "answer": "{leg}"},
+            {
+                "type": "fillsentence",
+                "sentence": "{hello}, {my_name_is}",
+                "answer": "hello my_name_is"
+            },
+            {"type": "multiplechoice", "sentence": "Will you {help} me with my homework?", "answer": "{yes}"},
+            {"type": "fillin", "sentence": "I ____ to answer the question.", "answer": "{want}"},
+            {"type": "fillsentence", "sentence": "{hello}, {teacher}", "answer": "hello teacher"}
+        ]
     }
 }
-

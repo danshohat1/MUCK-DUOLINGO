@@ -51,8 +51,9 @@ const LearnLanguage = () => {
       )
     }
 
-
+    console.log("here")
     const response = await axios.post(`http://${findHostname()}:8003/get-stages`, {username: sessionStorage.getItem('username'), language: lang.toUpperCase()});
+    console.log("here2")
     const data = response.data;
     console.log(data)
     setStagesInfo(data);
