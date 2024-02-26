@@ -5,11 +5,13 @@ app = App(port = 8000)
 
 def main():
     app.run()
-
+counter = 0
 
 @app.route(method = HttpMethod.GET, path = "/")
 def home():
-    return Render("index.html", username = "Muck mck")
+    global counter
+    counter += 1
+    return Render("index.html", username = str(counter))
 
 
 @app.route(method=HttpMethod.GET, path = "/login")

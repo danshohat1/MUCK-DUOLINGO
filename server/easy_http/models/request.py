@@ -13,8 +13,7 @@ class Request:
         self.__client_request = self.__client_socket.recv(1024).decode()
 
         self.details = self.generate_friendly_request()
-        print(self.details)
-        
+                
     def generate_friendly_request(self) -> Dict[str, Any]:
         """Split the raw HTTP request into a list and generate a user-friendly request with details."""
         ret = self.__client_request.split("\r\n")

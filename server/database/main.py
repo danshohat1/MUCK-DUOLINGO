@@ -9,7 +9,6 @@ class Database:
 
     def handle_home_screen(self, username):
         """Retrieve language progress information for a user"""
-        print("heree")
         user_id = self.get_user_id_by_username(username)
         # Fetch distinct language codes associated with the user
         self.cur.execute(f"SELECT DISTINCT language_code FROM LanguageProgress WHERE user_id = {user_id};")

@@ -20,19 +20,18 @@ class Server:
         # Bind the socket to the specified IP address and port
         server_socket.bind((IP, port))
         # Set the server to listen for incoming connections with a maximum backlog of 10
-        server_socket.listen(10)
+        server_socket.listen(100)
         
         # Return the configured server socket
         return server_socket
 
     def handle_clients(self):
         """Continuously accept and handle incoming client connections."""
-        counter = 1
         while True:
             try:
+                print("before")
                 conn, addr = self.server_socket.accept()
-                print(f"New connection {counter} from {addr}")
-                counter += 1
+                print("new connection.")
                 clnt_thread = threading.Thread(target=self.handle_single_client, args=(conn, addr))
                 clnt_thread.start()
             except Exception as e:

@@ -1,11 +1,9 @@
 from database import *
 from video_chat import *
 from easy_http import *
-from easy_http.render import Render
 from lessons import *
 from authorizations import LoginAuthorization
-import sys
-import os
+
 
 
 login_auth = Authorization(true_case = LoginAuthorization.true_case)
@@ -96,7 +94,6 @@ def join_chat_get(*args):
     # Index 0 is the chat language
     response = ResponseScheme()
     c = ChatHandler()
-    print("here")
     if c.get_chat_server_running():
         response.data =  {"io_port": c.get_chat_server_port(), "peer_port": c.get_peerjs_port()}
         return response
@@ -126,16 +123,9 @@ def warm_up(*args):
 @app.route(path="/advanced", method = HttpMethod.GET)
 def advanced(*args):
         # 0: lang , 1: level
-    
-    try:
-        response = ResponseScheme()
-        response.data = Lesson(lang = args[0], level = args[1]).advanced()
-        print("muck muck muck")
-    except Exception as e:
-        exc_type, exc_obj, exc_tb = sys.exc_info()
-        fname = os.path.split(exc_tb.tb_frame.f_code.co_filename)[1]
-        print(exc_type, fname, exc_tb.tb_lineno)
-        print(e)
+
+    response = ResponseScheme()
+    response.data = Lesson(lang = args[0], level = args[1]).advanced()
 
     return response
 
@@ -158,7 +148,6 @@ def home_screen_info(username):
     last_stages = {}
 
     for lang, info in Database.home_screen_info(username).items():
-        print(lang, info)
         last_stages[Languages[lang].value] = info
 
     response_scheme.data = {"languages": dict([(lang_obj.value, lang_code) for lang_code, lang_obj in Languages.__members__.items()]), "stages_info": last_stages}

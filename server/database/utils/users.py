@@ -124,7 +124,6 @@ class Users:
         Returns:
         - Dict: Information about all stages.
         """
-        print(username, lang)
 
         stages = {}
         stages["completed"] = Users.database.get_all_stages(username, lang)

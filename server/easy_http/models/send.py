@@ -14,7 +14,7 @@ class Send:
             response += func(**kwargs)
 
             kwargs["client_socket"].sendall(response.encode())
-
+            kwargs["client_socket"].close()
             return response
         return wrapper
 
