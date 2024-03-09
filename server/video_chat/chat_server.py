@@ -24,17 +24,20 @@ class ChatServer:
 
         # Find an open port and start the server on that port
         self.port = Port(START_PORT).port
-        
+
         print(f"Chat server is running at port {self.port}, updating chats")
 
         # Create a thread to run the socket.io server
-        func = lambda: eventlet.wsgi.server(eventlet.listen((IP.WILDCARD.value, self.port)), app)
-        run = threading.Thread(target= func)
+
+        run = threading.Thread(target=self.start_server)
         run.start()
 
         # Check for new connections
         self.check()
 
+    def start_server(self):
+        eventlet.wsgi.server(eventlet.listen((IP.WILDCARD.value, self.port)),
+                             app)
 
     def check(self):
         """Define and handle socket.io events for new connections"""
@@ -42,7 +45,7 @@ class ChatServer:
         @sio.event()
         def new_connection(sid, lang):
             """Handle a new connection event."""
-            
+
             group = Group.find_group(lang)
             if group:
                 # Inform existing users in the group about the new user
@@ -60,7 +63,7 @@ class ChatServer:
             print(f"User disconnected: {sid}")
 
             # Find the language associated with the disconnected user
-            
+
             user_group = [group for group in Group.all if sid in group][0]
 
             # Inform remaining users in the group
@@ -73,19 +76,20 @@ class ChatServer:
             if len(user_group) == 0:
                 print("here")
                 Group.all.remove(user_group)
-            
 
         @sio.event
         def peer(sid, target_sid, id, username):
             """Handle a peer communication event."""
             # Emit a 'peer' event to the target user with relevant details
-            sio.emit("peer", {"user_id": id, "sender_sid": sid, "username": username}, room=target_sid)
+            sio.emit("peer", {"user_id": id, "sender_sid": sid,
+                              "username": username}, room=target_sid)
             print("Peer sent to " + target_sid)
 
         @sio.event
         def get_peer_id(sid, target_sid, id, username):
             """Handle a get peer ID event."""
-            print(id)
-            # Emit a 'get_peer_id' event to the target user with relevant details
-            sio.emit("get_peer_id", {"peer_id": id, "sender_sid": sid, "username": username}, room=target_sid)
+            # Emit a 'get_peer_id' event to
+            # the target user with relevant details
+            sio.emit("get_peer_id", {"peer_id": id, "sender_sid": sid,
+                                     "username": username}, room=target_sid)
             print("Peer sent to " + target_sid)

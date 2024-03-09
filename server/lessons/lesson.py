@@ -1,13 +1,15 @@
 from .languages import Languages
 from .translator import Trans
-import json 
+import json
 from .generators import *
 from dataclasses import dataclass, field
 from typing import Dict, List
-import sys 
+import sys
 import os
+
 # Load lessons data from the JSON file
 LESSONS = json.load(open("lessons/lessons.json"))
+
 
 @dataclass(kw_only=True, slots=True)
 class Lesson:
@@ -49,23 +51,25 @@ class Lesson:
         # Set up attributes using lesson data
         self.level_data = LESSONS[str(self.level)]
         self.translate = Trans(self.lang.name.lower())
-        
 
         # Generate new words for the lesson
-        self.new_words = [self.translate(word) for word in self.level_data["newWords"]] 
+        self.new_words = [self.translate(word) for word in
+                          self.level_data["newWords"]]
         print(self.new_words)
         # Generate questions for the lesson
-        self.__questions = [self.translate(question) for question in self.level_data["questions"]]
+        self.__questions = [self.translate(question) for question in
+                            self.level_data["questions"]]
         print("here!!!!!!!!!!!!!!!!!!!!!!")
         # Set up warm-up and advanced lesson generators
 
         words = []
         for i in range(1, int(self.level) + 1):
             print(i)
-            words += [self.translate(word) for word in LESSONS[str(i)]["newWords"]] 
+            words += [self.translate(word)
+                      for word in LESSONS[str(i)]["newWords"]]
         print("here2")
         self.warm_up = WarmUp(self.new_words)
         print("here1")
-        self.advanced = Advanced(self.__questions, words) 
+        self.advanced = Advanced(self.__questions, words)
 
         print("here0")

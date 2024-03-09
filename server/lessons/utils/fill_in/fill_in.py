@@ -6,7 +6,7 @@ class FillInQuestion:
 
     def __repr__(self) -> str:
         return f"FillInQuestion({self.sentence}, {self.answer})"
-    
+
     def __iter__(self):
         yield "sentence", self.sentence
         yield "answer", self.answer

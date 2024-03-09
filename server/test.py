@@ -13,7 +13,8 @@ leaders = Database.get_leaders("*")
 for i, leader in enumerate(leaders):
     leaders[i]["language"] = Languages[leader["languageCode"]].value
 
-    leaders[i]["languageCode"] = languageFormat.get(leader["languageCode"], leader["languageCode"])
+    leaders[i]["languageCode"] = languageFormat.get(leader["languageCode"],
+                                                    leader["languageCode"])
 
 
 print(leaders)

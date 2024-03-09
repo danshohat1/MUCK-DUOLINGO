@@ -4,6 +4,7 @@ import random
 # Maximum number of members allowed in a group
 MAX_MEMBERS_IN_GROUP = 4
 
+
 class Group:
     # Class variable to store all instances of the Group class
     all = []
@@ -44,7 +45,9 @@ class Group:
         - sid (str): ID of the member to be removed.
 
         Returns:
-        - Optional['Group']: The modified group instance if the member was removed, None otherwise.
+        - Optional['Group']: The modified group instance if the member
+         was removed, None otherwise.
+
         """
         try:
             self.members.remove(sid)
@@ -86,10 +89,12 @@ class Group:
         - lang (str): Language to search for in groups.
 
         Returns:
-        - Union[Optional['Group'], None]: A group instance if found, None otherwise.
+        - Union[Optional['Group'], None]: A group instance if found,
+         None otherwise.
         """
-        # List comprehension to filter groups based on language and available space
-        groups = [group for group in Group.all if group._lang == lang and len(group) < MAX_MEMBERS_IN_GROUP]
+        # List comprehension to filter groups based on language and space
+        groups = [group for group in Group.all if
+                  group._lang == lang and len(group) < MAX_MEMBERS_IN_GROUP]
 
         # Check if there are any matching groups
         if not groups:

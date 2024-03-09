@@ -2,20 +2,21 @@ import json
 import jwt
 import datetime
 
+
 class Send:
-    
+
     @staticmethod
     def add_headers(func):
         def wrapper(**kwargs):
-
             response = f"HTTP/1.1 {kwargs['status']}\r\n"
             response += kwargs['cors'].generate_response()
-            
+
             response += func(**kwargs)
 
             kwargs["client_socket"].sendall(response.encode())
             kwargs["client_socket"].close()
             return response
+
         return wrapper
 
     @staticmethod
@@ -34,18 +35,17 @@ class Send:
                 "cookies": cookies
             }
         else:
-            response_body = result 
+            response_body = result
         json_response = json.dumps(response_body)
-        
 
         if isinstance(response_body, str):
             response = "Content-Type: text/html\r\n"
             response += f"Content-Length: {len(response_body)}\r\n\r\n"
             response += response_body
             return response
-        
+
         response = "Content-Type: application/json\r\n"
-        response += f"Content-Length: {len(json_response)}\r\n\r\n"  
+        response += f"Content-Length: {len(json_response)}\r\n\r\n"
         response += json.dumps(response_body)
 
         return response

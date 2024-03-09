@@ -1,10 +1,11 @@
-from ..main import Database  # Assuming there's a typo in 'Datbase' and should be 'Database'
+from ..main import \
+    Database  # Assuming there's a typo in 'Datbase' and should be 'Database'
 from ..hash import Hash
 import re
 from typing import Union, Dict, List
 
-class Users:
 
+class Users:
     # Instantiate the Database class
     database = Database()
 
@@ -19,7 +20,8 @@ class Users:
         Returns:
         - bool: True if the username exists, False otherwise.
         """
-        return any(username == _username[0] for _username in Users.database.get_all_usernames())
+        return any(username == _username[0] for _username in
+                   Users.database.get_all_usernames())
 
     @staticmethod
     def check_password(username: str, password: str) -> bool:
@@ -63,20 +65,24 @@ class Users:
         """
         if not Users.check_username_exists(username):
             return f"Username '{username}' is not recognized in the system."
-        
-        return "Logged in successfully" if Users.check_password(username, password) else "Your password is invalid. Please try again."
+
+        return "Logged in successfully" if Users.check_password(username,
+                                                                password) else\
+            "Your password is invalid. Please try again."
 
     @staticmethod
     def learned_languages(username: str) -> List[str]:
         """ returns all the langugaes that the user is learning"""
 
         return Users.database.get_all_languages(username)
-    
+
     @staticmethod
     def get_leaders(lang: str = "*") -> List[str]:
         leaders = Users.database.get_leaders(lang)
-        
-        return list(map(lambda leader: {"username": leader[0], "stage": leader[1], "languageCode": leader[2]}, leaders))
+
+        return list(
+            map(lambda leader: {"username": leader[0], "stage": leader[1],
+                                "languageCode": leader[2]}, leaders))
 
     @staticmethod
     def signup(username: str, password: str) -> str:
@@ -91,12 +97,12 @@ class Users:
         - str: Success or failure message.
         """
         if Users.check_username_exists(username):
-            return "User already exists" 
-        
+            return "User already exists"
+
         Users.database.create_user(username, Hash.hashed_password(password))
 
         return "User created successfully"
-    
+
     @staticmethod
     def home_screen_info(username: str) -> Dict:
         """
@@ -110,7 +116,6 @@ class Users:
         """
 
         return Users.database.handle_home_screen(username)
-
 
     @staticmethod
     def all_stages(username: str, lang: str) -> Dict:
@@ -128,7 +133,6 @@ class Users:
         stages = {}
         stages["completed"] = Users.database.get_all_stages(username, lang)
 
-
         for _, stage in stages["completed"].items():
             if stage["grade"] < 33:
                 stage["stars"] = 1
@@ -141,7 +145,7 @@ class Users:
         else:
             stages["current"] = 1
         stages["total"] = 5
-        
+
         return stages
 
     @staticmethod
@@ -153,23 +157,24 @@ class Users:
         - username (str): The username to be deleted.
         """
         Users.database.delete_user_by_username(username)
-    
+
     @staticmethod
-    def update_user(old_username: str, new_username: str, new_password: Union[str, bool]) -> None:
+    def update_user(old_username: str, new_username: str,
+                    new_password: Union[str, bool]) -> None:
         """
         Update user information.
 
         Parameters:
         - old_username (str): The current username.
         - new_username (str): The new username.
-        - new_password (Union[str, bool]): The new password or a flag indicating to keep the existing password.
+        - new_password (Union[str, bool]): The new password
+        or a flag indicating to keep the existing password.
         """
-        
-        # If no new password is provided or the provided password is not in SHA-256 format,
+
         # use the existing password hash for the user.
         if isinstance(new_password, bool):
             new_password = Users.get_password(old_username)
-            
+
         elif not Hash.is_hashed(new_password):
             new_password = Hash.hashed_password(new_password)
 

@@ -5,23 +5,23 @@ from typing import Tuple
 
 IP = "0.0.0.0"
 
+
 class Server:
     def __init__(self, port: int):
         self.port = port
-    
-    def run(self): 
+
+    def run(self):
         self.server_socket = self.initiate_server(self.port)
         threading.Thread(target=self.handle_clients).start()
-    
+
     def initiate_server(self, port):
         """Create and configure the server socket."""
         # Create a socket using IPv4 and TCP
         server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # Bind the socket to the specified IP address and port
         server_socket.bind((IP, port))
-        # Set the server to listen for incoming connections with a maximum backlog of 10
         server_socket.listen(100)
-        
+
         # Return the configured server socket
         return server_socket
 
@@ -29,11 +29,10 @@ class Server:
         """Continuously accept and handle incoming client connections."""
         while True:
             try:
-                print("before")
                 conn, addr = self.server_socket.accept()
-                print("new connection.")
-                clnt_thread = threading.Thread(target=self.handle_single_client, args=(conn, addr))
+                clnt_thread = \
+                    threading.Thread(target=self.handle_single_client,
+                                     args=(conn, addr))
                 clnt_thread.start()
             except Exception as e:
                 print(f"Failed to accept a connection: {e}")
-

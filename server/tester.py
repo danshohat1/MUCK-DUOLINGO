@@ -23,15 +23,17 @@ def test_pep8(folder, files):
 
 def list_files(folder):
     """
-    Returns a list of all Python files in the specified folder and its subfolders,
+    Returns a list of all Python files in
+    the specified folder and its subfolders,
     ignoring specified directories such as 'venv', '.idea', and '__pycache__'.
     """
     ignored_dirs = {'venv', '.idea', '__pycache__'}
     python_files = []
 
     for root, dirs, files in os.walk(folder, topdown=True):
-        dirs[:] = [d for d in dirs if d not in ignored_dirs]  # Modify dirs in-place to ignore
-        python_files += [os.path.join(root, file) for file in files if file.endswith('.py')]
+        dirs[:] = [d for d in dirs if d not in ignored_dirs]
+        python_files += [os.path.join(root, file) for file in files
+                         if file.endswith('.py')]
 
     return python_files
 

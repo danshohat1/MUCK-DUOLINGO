@@ -1,5 +1,6 @@
-from ..main import Database  
+from ..main import Database
 from typing import Dict
+
 
 class Stages:
     # Static class that handles the lessons info in the database.
@@ -8,7 +9,8 @@ class Stages:
     database = Database()
 
     @staticmethod
-    def add_stage_data(username: str, lang: str, level: int, stage_points: int) -> None: 
+    def add_stage_data(username: str, lang: str, level: int,
+                       stage_points: int) -> None:
         """
         Add or update stage data for a user in the database.
 
@@ -23,7 +25,7 @@ class Stages:
         else:
             print("User already has stage data, updating.")
             Stages.update_stage_data(username, lang, level, stage_points)
-    
+
     @staticmethod
     def get_stage_data(username: str, lang: str, level: int) -> Dict:
         """
@@ -37,14 +39,15 @@ class Stages:
         Returns:
         - Dict: Dictionary containing stage data.
         """
-        try: 
+        try:
             return Stages.database.get_stage_data(username, lang, level)
         except Exception as e:
             print(f"Error retrieving stage data: {e}")
             return {}
 
     @staticmethod
-    def update_stage_data(username: str, lang: str, level: int, stage_points: int) -> None:
+    def update_stage_data(username: str, lang: str, level: int,
+                          stage_points: int) -> None:
         """
         Update stage data for a user in the database.
 
@@ -54,7 +57,10 @@ class Stages:
         - level (int): The level of the stage.
         - stage_points (int): The points achieved in the stage.
         """
-        print(f"Updating stage data for user {username} in {lang} - Level {level} with {stage_points} points.")
+        print(
+            f"Updating stage data for user {username} in {lang} - Level " +
+            f"{level}  " +
+            f"with  {stage_points} points.")
         Stages.database.update_stage_data(username, lang, level, stage_points)
 
     @staticmethod

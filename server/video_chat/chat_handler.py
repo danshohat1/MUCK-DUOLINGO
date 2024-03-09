@@ -22,13 +22,15 @@ class ChatHandler:
         # Start the PeerJS server in a separate thread
         command = f"peerjs --port {peerjs_port}"
         func = lambda: subprocess.run(command, shell=True)
-        t1 = threading.Thread(target= func)
+        t1 = threading.Thread(target=func)
         t1.start()
 
         # Create and start the Chat Server
+        print("here")
         chat_server = ChatServer(lang)
+        print("here2")
         chat_server_port = chat_server.port
-
+        print("chat running")
         # Set the flag indicating that the chat server is running
         chat_server_running = True
 

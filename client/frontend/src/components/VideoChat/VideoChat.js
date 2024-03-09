@@ -31,25 +31,19 @@ const VideoCallComponent = () => {
 
   const handleHangup = () => {
 
-    if (_localStream) {
-      _localStream.getTracks().forEach((track) => {
-        track.stop();
-      });
-    }
-    _myPeer.destroy();
-    _socket.disconnect();
     navigate(`/learn/${lang}`);
   };
 
-  useEffect(async () => {
+  useEffect(() => {
     let socket;
     let localStream;
-
+    let myPeer;
+    let loggedIn = true;
     setIsLoading(true);
-
-
-  
+    (async () => {
+      
     if (sessionStorage.getItem("loggedIn") !== "true"){
+      loggedIn = false;
       return (
         navigate("/login")
       )
@@ -57,7 +51,7 @@ const VideoCallComponent = () => {
     const res = await axios.get(`http://${findHostname()}:8003/join_chat?lang=${lang}`);
     console.log(res)
     const { io_port, peer_port } = res.data;
-    const myPeer = new Peer(undefined, {
+    myPeer = new Peer(undefined, {
       host: '/',
       port: peer_port,
     });
@@ -220,10 +214,23 @@ const VideoCallComponent = () => {
 
       handleSocketEvents();
     });
-
+    })()
     return () => {
-      handleHangup()
-    };
+      if (loggedIn){
+        console.log("componnent")
+        if (localStream) {
+          localStream.getTracks().forEach((track) => {
+            track.stop();
+          });
+        }
+        myPeer.destroy();
+        socket.disconnect();
+        return
+      };
+      navigate(
+        "/login"
+      )
+      }
   },[]);
 const getGridStyle = (participants) => {
   switch (participants) {

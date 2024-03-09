@@ -4,6 +4,7 @@ from typing import Type
 # Import the IP enumeration from the 'enums' module
 from .enums import IP
 
+
 class Port:
     def __new__(cls: Type['Port'], start_port: int) -> 'Port':
         """
@@ -44,7 +45,7 @@ class Port:
             return True
         except:
             return False
-    
+
     def __repr__(self) -> str:
         """
         Return a string representation of the Port instance.
