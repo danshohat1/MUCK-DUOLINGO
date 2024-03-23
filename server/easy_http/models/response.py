@@ -1,7 +1,6 @@
 from .request import Request
 from socket import socket
-from typing import List, Tuple, TypeVar, Union
-from ..route import Route
+from typing import Tuple, TypeVar, Union
 from ..enums import Statuses
 from .send import Send
 from ..response_scheme import ResponseScheme

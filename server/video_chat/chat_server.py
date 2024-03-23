@@ -33,13 +33,13 @@ class ChatServer:
         run.start()
 
         # Check for new connections
-        self.check()
+        self.listen()
 
     def start_server(self):
         eventlet.wsgi.server(eventlet.listen((IP.WILDCARD.value, self.port)),
                              app)
 
-    def check(self):
+    def listen(self):
         """Define and handle socket.io events for new connections"""
 
         @sio.event()

@@ -10,6 +10,11 @@ peerjs_port = None
 
 
 class ChatHandler:
+
+    @staticmethod
+    def run_command(command: str) -> None:
+        subprocess.run(command, shell=True)
+
     def create_chat(self, lang: str, start_port=5000) -> None:
         """Create a new chat with the specified language"""
         global chat_server_running
@@ -21,8 +26,7 @@ class ChatHandler:
 
         # Start the PeerJS server in a separate thread
         command = f"peerjs --port {peerjs_port}"
-        func = lambda: subprocess.run(command, shell=True)
-        t1 = threading.Thread(target=func)
+        t1 = threading.Thread(target=ChatHandler.run_command, args=(command,))
         t1.start()
 
         # Create and start the Chat Server

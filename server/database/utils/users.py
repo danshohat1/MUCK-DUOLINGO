@@ -1,7 +1,6 @@
 from ..main import \
-    Database  # Assuming there's a typo in 'Datbase' and should be 'Database'
+    Database 
 from ..hash import Hash
-import re
 from typing import Union, Dict, List
 
 
@@ -79,7 +78,7 @@ class Users:
     @staticmethod
     def get_leaders(lang: str = "*") -> List[str]:
         leaders = Users.database.get_leaders(lang)
-
+        print(leaders)
         return list(
             map(lambda leader: {"username": leader[0], "stage": leader[1],
                                 "languageCode": leader[2]}, leaders))

@@ -163,13 +163,14 @@ class Database:
                     """
 
         res = self.cur.execute(query).fetchall()
-
+        print(res)
         res = [(self.username(val[0])[0], val[1], val[2]) for val in res if
                self.username(val[0])]
+        print(res)
         return res
 
-    def username(self, id):
-        self.get_user_by_id(id)
+    def username(self, id: str) -> str:
+        return self.get_user_by_id(id)
 
     def close(self):
         """Close the database connection."""

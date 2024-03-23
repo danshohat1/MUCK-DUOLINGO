@@ -337,7 +337,7 @@ const LanguagePracticeComponent = () => {
     const response = await axios.post(`http://${findHostname()}:8003/add_stage `, {username: sessionStorage.getItem("username"), lang: lang.toUpperCase(), level: level, points: points})
 
     console.log(response.data)
-    navigate(`/new-words/${lang}/${level+1}`);
+    navigate(`/new-words/${lang}/${parseInt(level)+1}`);
   }
 
   const handleBackToMain = async () => {

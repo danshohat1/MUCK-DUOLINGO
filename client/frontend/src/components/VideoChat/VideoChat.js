@@ -49,7 +49,6 @@ const VideoCallComponent = () => {
       )
     }
     const res = await axios.get(`http://${findHostname()}:8003/join_chat?lang=${lang}`);
-    console.log(res)
     const { io_port, peer_port } = res.data;
     myPeer = new Peer(undefined, {
       host: '/',
@@ -81,7 +80,6 @@ const VideoCallComponent = () => {
         if (!userVideoElements[call.peer]) {
 
           setParticipants(prev => prev + 1);
-          console.log("participants: " + participants)
           const containerDiv = document.createElement('div');
           containerDiv.style.position = 'relative';
           containerDiv.style.width = '320px';
@@ -114,7 +112,6 @@ const VideoCallComponent = () => {
             updateLayout()
           }
           catch{
-            console.log("catched")
           }
 
         }
@@ -123,7 +120,6 @@ const VideoCallComponent = () => {
 
     const handleSocketEvents = () => {
       socket.on('connect', () => {
-        console.log(`My Socket ID: ${socket.id}`);
         socket.emit('new_connection', lang);
       });
 
@@ -166,7 +162,6 @@ const VideoCallComponent = () => {
 
             document.getElementById('video-chat').appendChild(containerDiv);
             userVideoElements[data.user_id] = containerDiv;
-            console.log("participants: " + participants)
             updateLayout()
 
           }
@@ -182,12 +177,10 @@ const VideoCallComponent = () => {
       });
 
       socket.on('user_connected', (user_sid) => {
-        console.log('User connected: ' + user_sid);
         socket.emit('peer', user_sid, myPeer.id, sessionStorage.getItem('username'));
       });
 
       socket.on('user_disconnected', (user_sid) => {
-        console.log('User disconnected: ' + user_sid);
         const userVideoElement = userVideoElements[idFormat.find((val) => val[1] === user_sid)[0]];
         if (userVideoElement) {
           document.getElementById('video-chat').removeChild(userVideoElement);
@@ -217,7 +210,6 @@ const VideoCallComponent = () => {
     })()
     return () => {
       if (loggedIn){
-        console.log("componnent")
         if (localStream) {
           localStream.getTracks().forEach((track) => {
             track.stop();

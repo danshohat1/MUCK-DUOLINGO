@@ -110,6 +110,7 @@ def join_chat_get(*args):
     c.create_chat(args[0])
     response.data = {"io_port": c.get_chat_server_port(),
                      "peer_port": c.get_peerjs_port()}
+    print("sending")
     return response
 
 
@@ -191,6 +192,7 @@ def leaderboard():
         leaders[i]["languageCode"] = languageFormat.get(leader["languageCode"],
                                                         leader["languageCode"])
 
+    print(leaders)
     response_scheme.data = leaders
     return response_scheme
 

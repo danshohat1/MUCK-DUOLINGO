@@ -1,5 +1,4 @@
 from easy_http import *
-from easy_http.render import Render
 
 app = App(port=8000)
 
@@ -8,14 +7,9 @@ def main():
     app.run()
 
 
-counter = 0
-
-
 @app.route(method=HttpMethod.GET, path="/")
 def home():
-    global counter
-    counter += 1
-    return Render("index.html", username=str(counter))
+    return Render("index.html", username="John Doe")
 
 
 @app.route(method=HttpMethod.GET, path="/login")
